@@ -1,18 +1,27 @@
-import { StatusBar } from "expo-status-bar"
-import { Stack } from "expo-router"
-
-// themed components
-import { Colors } from "../constants/Colors"
+import { Stack } from 'expo-router'
+import {
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    useFonts,
+} from '@expo-google-fonts/poppins'
 
 const RootLayout = () => {
+    const [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+        Poppins_500Medium,
+        Poppins_600SemiBold,
+        Poppins_700Bold,
+    })
+
+    if (!fontsLoaded) return null
+
     return (
-        <>
-            <StatusBar backgroundColor={Colors.background} />
-            <Stack>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="home" options={{ headerShown: false }} />
-            </Stack>
-        </>
+        <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="home" options={{ headerShown: false }} />
+        </Stack>
     )
 }
 

@@ -1,8 +1,20 @@
 export const Colors = {
-    primary: "#10B981",
-    onPrimary: "#FFF",
-    background: "#F9FAFB",
-    text: "#111827",
-    error: "#EF4444",
-    success: "#10B981"
+    primary: '#10B981',
+    onPrimary: '#FFF',
+    background: '#F9FAFB',
+    error: '#EF4444',
+    success: '#10B981',
+    iconColor: 'gray',
+
+    white: {
+        subtle: 'rgba(255, 255, 255, 0.15)',
+        muted: 'rgba(255, 255, 255, 0.25)',
+        medium: 'rgba(255, 255, 255, 0.50)',
+        normal: '#FFF',
+    },
+    text: {
+        normal: '#111827', // primary text
+        muted: '#6B7280', // secondary/supporting text
+        subtle: '#9CA3AF', // placeholder, disabled, hints
+    },
 }
