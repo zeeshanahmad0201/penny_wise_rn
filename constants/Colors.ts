@@ -15,6 +15,6 @@ export const Colors = {
     text: {
         normal: '#111827', // primary text
         muted: '#6B7280', // secondary/supporting text
-        subtle: '#9CA3AF', // placeholder, disabled, hints
+        subtle: '#d5d7da', // placeholder, disabled, hints
     },
 }

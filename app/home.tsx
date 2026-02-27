@@ -1,5 +1,6 @@
 import { Image, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { useRef, useState } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -7,16 +8,23 @@ import Spacer from '@components/base/Spacer'
 import MetricCard from '@components/shared/MetricCard'
 import PeriodSelector from '@components/shared/PeriodSelector'
 import WeekItem from '@components/shared/WeekItem'
+import AppBottomSheet from '@components/ui/BottomSheet'
+import AddTransaction from '@components/shared/AddTransaction'
 
 // constants
 import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+import BottomSheet from '@gorhom/bottom-sheet'
 
 // assets
 import AppIcon from '@assets/icon.png'
+import FAB from '@components/base/FAB'
 
 const Home = () => {
+    const bottomSheetRef = useRef<BottomSheet>(null)
+    const [sheetKey, setSheetKey] = useState(0)
+
     return (
         <ThemedView main style={{ paddingHorizontal: 0 }}>
             {/* AppBar */}
@@ -59,6 +67,17 @@ const Home = () => {
                 <Spacer height={20} />
                 <WeekItem />
             </ThemedView>
+
+            {/* FAB */}
+            <FAB icon="add" onPress={() => bottomSheetRef.current?.expand()} />
+            <AppBottomSheet
+                ref={bottomSheetRef}
+                onChange={(index) => {
+                    if (index === -1) setSheetKey((prev) => prev + 1)
+                }}
+            >
+                <AddTransaction key={sheetKey} />
+            </AppBottomSheet>
         </ThemedView>
     )
 }
