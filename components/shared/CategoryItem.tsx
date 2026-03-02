@@ -17,7 +17,7 @@ import { Typography } from '@constants/Typography'
 
 // calculate the item width for responsiveness
 export const COLUMNS = 4
-export const GAP = Spacing.paddingMd
+export const GAP = Spacing.spacingMd
 const SCREEN_WIDTH = Dimensions.get('window').width
 const HORIZONTAL_PADDING = Spacing.pageHorizontalPadding * 2
 const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * (COLUMNS - 1)) / COLUMNS

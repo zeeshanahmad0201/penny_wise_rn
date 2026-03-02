@@ -11,7 +11,10 @@
             "@typography/*": ["typography/*"],
             "@models/*": ["models/*"],
             "@data/*": ["data/*"],
-            "@utils/*": ["utils/*"]
+            "@utils/*": ["utils/*"],
+            "@services/*": ["services/*"],
+            "@stores/*": ["stores/*"],
+            "@hooks/*": ["hooks/*"]
         }
     },
     "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"]

@@ -15,6 +15,7 @@ import ThemedView from '@components/base/ThemedView'
 import NumPad from '@components/ui/NumPad'
 import Button from '@components/ui/Button'
 import Spacer from '@components/base/Spacer'
+import InlineAlert from '@components/shared/InlineAlert'
 
 // constants
 import { Colors } from '@constants/Colors'
@@ -22,21 +23,31 @@ import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
 export type NumPadContainerProps = {
-    visible: boolean
+    isVisible: boolean
     isIncome: boolean
+    onSubmit: (payload: TransactionPayload) => void
+    isLoading: boolean
 }
 
-const NumPadContainer = ({ visible, isIncome }: NumPadContainerProps) => {
+export type TransactionPayload = {
+    amount: number
+    date: Date
+    notes: string
+}
+
+const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadContainerProps) => {
     const [amount, setAmount] = useState<string>('0')
     const [notes, setNotes] = useState<string>('')
     const [show, setShow] = useState<boolean>(false)
     const [date, setDate] = useState<Date>(new Date())
+    const [error, setError] = useState<string | null>(null)
 
     const translateY = useSharedValue(300)
+    const isValidAmount = !!amount && amount !== '0'
 
     useEffect(() => {
-        translateY.value = visible ? withSpring(0) : withTiming(1000)
-    }, [visible, translateY])
+        translateY.value = isVisible ? withSpring(0) : withTiming(1000)
+    }, [isVisible, translateY])
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ translateY: translateY.value }],
@@ -66,15 +77,32 @@ const NumPadContainer = ({ visible, isIncome }: NumPadContainerProps) => {
         }
     }
 
+    const handleSubmit = () => {
+        setError(null)
+        if (!isValidAmount) {
+            setError('Please enter a valid amount')
+            return
+        }
+
+        onSubmit({
+            amount: parseFloat(amount) || 0,
+            notes,
+            date,
+        })
+    }
+
     return (
         <Animated.View style={animatedStyle}>
             <ThemedView style={Styles.container}>
+                {/* Error */}
+                {error && <InlineAlert type="error" message={error} />}
+
                 {/* Amount Display */}
                 <ThemedView style={Styles.amountContainer}>
                     <Text
                         style={[Styles.amount, { color: isIncome ? Colors.success : Colors.error }]}
                     >
-                        Rs{amount ?? '0'}
+                        Rs{amount}
                     </Text>
                 </ThemedView>
 
@@ -118,15 +146,15 @@ const NumPadContainer = ({ visible, isIncome }: NumPadContainerProps) => {
                 <NumPad onClear={onClear} onNumberPress={handleNumberPress} />
 
                 <Button
-                    title="Save"
-                    onPress={() => {}}
+                    title={isLoading ? 'Saving...' : 'Save'}
+                    onPress={handleSubmit}
                     style={[
                         Styles.button,
-                        !(!amount || amount === '0') && {
+                        isValidAmount && {
                             backgroundColor: isIncome ? Colors.success : Colors.error,
                         },
                     ]}
-                    disabled={!amount || amount === '0'}
+                    disabled={!isValidAmount || isLoading}
                 />
             </ThemedView>
         </Animated.View>
@@ -144,13 +172,13 @@ const Styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
         shadowRadius: 8,
-        paddingVertical: Spacing.paddingMd,
+        paddingVertical: Spacing.spacingMd,
     },
     amountContainer: {
         backgroundColor: Colors.background,
         marginHorizontal: Spacing.pageHorizontalPadding,
         borderRadius: Spacing.radiusSm,
-        padding: Spacing.paddingMd,
+        padding: Spacing.spacingMd,
     },
     amount: {
         ...Typography.headlineLg,
@@ -160,15 +188,15 @@ const Styles = StyleSheet.create({
         ...Typography.labelMd,
         flex: 1,
         backgroundColor: Colors.background,
-        paddingHorizontal: Spacing.paddingMd,
-        paddingVertical: Spacing.paddingMd,
+        paddingHorizontal: Spacing.spacingMd,
+        paddingVertical: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
         marginLeft: Spacing.pageHorizontalPadding,
-        marginRight: Spacing.paddingSm,
+        marginRight: Spacing.spacingSm,
     },
     datePicker: {
-        paddingHorizontal: Spacing.paddingMd,
-        paddingVertical: Spacing.paddingMd,
+        paddingHorizontal: Spacing.spacingMd,
+        paddingVertical: Spacing.spacingMd,
         backgroundColor: Colors.background,
         marginRight: Spacing.pageHorizontalPadding,
         borderRadius: Spacing.radiusSm,

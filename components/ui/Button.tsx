@@ -33,7 +33,7 @@ const Styles = StyleSheet.create({
         height: 55,
         backgroundColor: Colors.primary,
         borderRadius: Spacing.radiusSm,
-        marginVertical: Spacing.paddingMd,
+        marginVertical: Spacing.spacingMd,
         justifyContent: 'center',
         alignItems: 'center',
     },

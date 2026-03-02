@@ -22,7 +22,7 @@ const WeekItem = () => {
             categoryIndex: 0,
             type: TransactionType.income,
             createdAt: subDays(new Date(), 7),
-            note: 'Monthly Credit',
+            notes: 'Monthly Credit',
         },
         {
             id: '2',
@@ -30,7 +30,7 @@ const WeekItem = () => {
             categoryIndex: 0,
             type: TransactionType.expense,
             createdAt: subDays(new Date(), 1),
-            note: 'Pizza',
+            notes: 'Pizza',
         },
     ]
 
@@ -63,7 +63,7 @@ const Styles = StyleSheet.create({
     },
     content: {
         backgroundColor: Colors.white.normal,
-        padding: Spacing.paddingMd,
+        padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
         borderWidth: Spacing.borderWidth,
         borderColor: Colors.text.subtle,

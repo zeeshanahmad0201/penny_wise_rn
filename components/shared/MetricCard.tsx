@@ -45,7 +45,7 @@ const Styles = StyleSheet.create({
         borderColor: Colors.white.normal,
         borderWidth: Spacing.borderWidth,
         flex: 1,
-        padding: Spacing.paddingMd,
+        padding: Spacing.spacingMd,
         backgroundColor: Colors.white.subtle,
         borderRadius: Spacing.radiusSm,
     },
@@ -54,7 +54,7 @@ const Styles = StyleSheet.create({
     },
     iconBg: {
         backgroundColor: Colors.white.muted,
-        padding: Spacing.paddingSm,
+        padding: Spacing.spacingSm,
         borderRadius: Spacing.radiusFull,
     },
     icon: {

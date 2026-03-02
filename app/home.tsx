@@ -76,7 +76,7 @@ const Home = () => {
                     if (index === -1) setSheetKey((prev) => prev + 1)
                 }}
             >
-                <AddTransaction key={sheetKey} />
+                <AddTransaction key={sheetKey} onClose={() => bottomSheetRef.current?.close()} />
             </AppBottomSheet>
         </ThemedView>
     )

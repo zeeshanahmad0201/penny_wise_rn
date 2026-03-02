@@ -51,10 +51,10 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
                     {category?.label}
                 </Text>
 
-                {transaction.note && (
+                {transaction.notes && (
                     <>
                         <Text style={Styles.description} numberOfLines={1} ellipsizeMode="tail">
-                            {transaction.note}
+                            {transaction.notes}
                         </Text>
                     </>
                 )}

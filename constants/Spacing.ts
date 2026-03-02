@@ -3,10 +3,10 @@ const Spacing = {
     pageHorizontalPadding: 24,
     pageVerticalPadding: 12,
 
-    // Padding
-    paddingSm: 4,
-    paddingMd: 16,
-    paddingLg: 24,
+    // Spacing
+    spacingSm: 4,
+    spacingMd: 16,
+    spacingLg: 24,
 
     // Icon Sizes
     iconSm: 16,

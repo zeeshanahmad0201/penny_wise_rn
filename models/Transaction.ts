@@ -4,10 +4,10 @@ export enum TransactionType {
 }
 
 export type Transaction = {
-    id: string
+    id?: string
     amount: number
     categoryIndex: number
     type: TransactionType
-    note?: string
+    notes?: string
     createdAt: Date
 }

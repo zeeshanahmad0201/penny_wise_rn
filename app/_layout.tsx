@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router'
+import { useEffect } from 'react'
 import {
     Poppins_400Regular,
     Poppins_500Medium,
@@ -8,7 +9,15 @@ import {
 } from '@expo-google-fonts/poppins'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
+// services
+import { initDatabase } from '@services/database'
+
 const RootLayout = () => {
+    useEffect(() => {
+        initDatabase()
+        // dropDatabase()
+    }, [])
+
     const [fontsLoaded] = useFonts({
         Poppins_400Regular,
         Poppins_500Medium,

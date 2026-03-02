@@ -100,7 +100,7 @@ const Styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: Spacing.paddingSm,
+        paddingHorizontal: Spacing.spacingSm,
         paddingVertical: Spacing.pageVerticalPadding,
         borderRadius: Spacing.radiusMd,
     },
