@@ -13,11 +13,11 @@ import { Typography } from '@constants/Typography'
 const MetricCard = ({
     title,
     amount = 0,
-    income = true,
+    isIncome: income = true,
 }: {
     title: string
     amount?: number
-    income?: boolean
+    isIncome?: boolean
 }) => {
     return (
         <ThemedView style={Styles.container}>
@@ -33,7 +33,7 @@ const MetricCard = ({
                 <Text style={Styles.title}>{title}</Text>
             </ThemedView>
             <Spacer height={5} />
-            <Text style={Styles.amount}>Rs{amount.toFixed(2)}</Text>
+            <Text style={Styles.amount}>Rs{amount ?? '0.00'}</Text>
         </ThemedView>
     )
 }

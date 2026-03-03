@@ -1,11 +1,15 @@
 import * as Crypto from 'expo-crypto'
+import { format } from 'date-fns'
 
 // services
 import db, { TRANSACTIONS_TABLE as TABLE_TRANSACTIONS } from '@services/database'
 
 // models
-import { Transaction, TransactionType } from '@models/Transaction'
+import { Transaction, NewTransaction, TransactionType } from '@models/Transaction'
 import { Summary } from '@models/Summary'
+
+// constants
+import { DateFormat } from '@constants/DateFormat'
 
 const buildDatePrefix = (year: number, month: number) =>
     `${year}-${String(month).padStart(2, '0')}%`
@@ -19,7 +23,7 @@ type TransactionRow = {
     created_at: string
 }
 
-export const insertTransaction = async (transaction: Transaction) => {
+export const insertTransaction = async (transaction: NewTransaction) => {
     try {
         const id = Crypto.randomUUID()
         await db.runAsync(
@@ -30,7 +34,7 @@ export const insertTransaction = async (transaction: Transaction) => {
                 transaction.type,
                 transaction.categoryIndex,
                 transaction.notes ?? null,
-                transaction.createdAt.toISOString(),
+                format(transaction.createdAt, DateFormat.storage), // toISOString() converts to UTC - store in local time instead
             ]
         )
     } catch (error) {
@@ -54,8 +58,8 @@ export const getSummary = async (year: number, month: number) => {
         return (
             (await db.getFirstAsync<Summary>(
                 `SELECT
-            SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
-            SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
+            SUM(CASE WHEN type = 'Income' THEN amount ELSE 0 END) as income,
+            SUM(CASE WHEN type = 'Expense' THEN amount ELSE 0 END) as expense
             FROM ${TABLE_TRANSACTIONS} WHERE created_at LIKE ?
         `,
                 [buildDatePrefix(year, month)]

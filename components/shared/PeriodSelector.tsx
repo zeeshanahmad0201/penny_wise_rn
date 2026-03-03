@@ -9,6 +9,7 @@ import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
 type PeriodSelectorProps = {
+    title: string
     onPrevious: () => void
     onNext: () => void
     hasPrevious?: boolean
@@ -16,6 +17,7 @@ type PeriodSelectorProps = {
 }
 
 const PeriodSelector = ({
+    title,
     onPrevious,
     onNext,
     hasPrevious = true,
@@ -31,7 +33,7 @@ const PeriodSelector = ({
             )}
 
             {/* Current Month */}
-            <Text style={Styles.title}>February 2026</Text>
+            <Text style={Styles.title}>{title}</Text>
 
             {/* Next */}
             {hasNext && (

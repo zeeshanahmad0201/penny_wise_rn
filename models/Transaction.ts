@@ -4,10 +4,17 @@ export enum TransactionType {
 }
 
 export type Transaction = {
-    id?: string
+    id: string
     amount: number
     categoryIndex: number
     type: TransactionType
     notes?: string
     createdAt: Date
+}
+
+export type NewTransaction = Omit<Transaction, 'id'>
+
+export type WeekGroup = {
+    label: string
+    transactions: Transaction[]
 }

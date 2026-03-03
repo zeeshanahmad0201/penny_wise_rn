@@ -9,6 +9,8 @@ import Spacer from '@components/base/Spacer'
 // constants
 import { Typography } from '@constants/Typography'
 import Spacing from '@constants/Spacing'
+import { Colors } from '@constants/Colors'
+import { DateFormat } from '@constants/DateFormat'
 
 // models
 import { Transaction, TransactionType } from '@models/Transaction'
@@ -18,13 +20,12 @@ import { categories } from '@data/categories'
 
 // utils
 import { withOpacity } from '@utils/colorUtils'
-import { Colors } from '@constants/Colors'
 
 const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
     const isIncome = transaction.type === TransactionType.income
     const typeMeta = isIncome ? categories.income : categories.expense
     const category = typeMeta.at(transaction.categoryIndex)
-    const defaultColor = '#000'
+    const defaultColor = Colors.text.normal
 
     return (
         <ThemedView row>
@@ -52,23 +53,27 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
                 </Text>
 
                 {transaction.notes && (
-                    <>
-                        <Text style={Styles.description} numberOfLines={1} ellipsizeMode="tail">
-                            {transaction.notes}
-                        </Text>
-                    </>
+                    <Text style={Styles.description} numberOfLines={1} ellipsizeMode="tail">
+                        {transaction.notes}
+                    </Text>
                 )}
             </ThemedView>
 
             {/* Suffix */}
             <ThemedView style={Styles.suffix}>
-                <Text style={[Styles.amount, isIncome ? Styles.income : Styles.expense]}>
+                <Text
+                    style={[Styles.amount, isIncome ? Styles.income : Styles.expense]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                >
                     Rs{transaction.amount.toFixed(2)}
                 </Text>
 
                 <Spacer height={3} />
 
-                <Text style={Styles.date}>{format(transaction.createdAt, 'MMM d')}</Text>
+                <Text style={Styles.date}>
+                    {format(transaction.createdAt, DateFormat.monthDay)}
+                </Text>
             </ThemedView>
         </ThemedView>
     )

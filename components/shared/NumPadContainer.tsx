@@ -21,6 +21,7 @@ import InlineAlert from '@components/shared/InlineAlert'
 import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+import { DateFormat } from '@constants/DateFormat'
 
 export type NumPadContainerProps = {
     isVisible: boolean
@@ -85,7 +86,7 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
         }
 
         onSubmit({
-            amount: parseFloat(amount) || 0,
+            amount: parseFloat(amount),
             notes,
             date,
         })
@@ -121,6 +122,7 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
                     <DateTimePickerModal
                         isVisible={show}
                         mode="date"
+                        maximumDate={new Date()}
                         onConfirm={(selectedDate) => {
                             setDate(selectedDate)
                             setShow(false)
@@ -135,7 +137,9 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
                                 size={Spacing.iconSm}
                             />
                             <Spacer height="100%" width={10} />
-                            <Text style={Styles.datePickerText}>{format(date, 'd MMM')}</Text>
+                            <Text style={Styles.datePickerText}>
+                                {format(date, DateFormat.dayMonth)}
+                            </Text>
                         </ThemedView>
                     </TouchableOpacity>
                 </ThemedView>

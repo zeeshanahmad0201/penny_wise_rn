@@ -1,6 +1,7 @@
 import { Image, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useRef, useState } from 'react'
+import { addMonths, format, subMonths } from 'date-fns'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -16,14 +17,29 @@ import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 import BottomSheet from '@gorhom/bottom-sheet'
+import { DateFormat } from '@constants/DateFormat'
 
 // assets
 import AppIcon from '@assets/icon.png'
 import FAB from '@components/base/FAB'
 
+// hooks
+import useTransactions from '@hooks/useTransactions'
+import { FlatList } from 'react-native-gesture-handler'
+import EmptyState from '@components/shared/EmptyState'
+
 const Home = () => {
     const bottomSheetRef = useRef<BottomSheet>(null)
+    // Increment key to reset AddTransaction state when sheet closes
     const [sheetKey, setSheetKey] = useState(0)
+
+    const { summary, selectedMonth, setSelectedMonth, weekGroups } = useTransactions()
+
+    const balance = (summary.income - summary.expense).toFixed(2)
+    const now = new Date()
+    const thisMonth =
+        selectedMonth.getFullYear() === now.getFullYear() &&
+        selectedMonth.getMonth() === now.getMonth()
 
     return (
         <ThemedView main style={{ paddingHorizontal: 0 }}>
@@ -46,26 +62,49 @@ const Home = () => {
                 <ThemedView style={Styles.balanceCard}>
                     <Text style={Styles.balanceTitle}>Total Balance</Text>
                     <Spacer height={20} />
-                    <Text style={Styles.balance}>Rs0.00</Text>
+                    <Text style={Styles.balance} numberOfLines={1} adjustsFontSizeToFit>
+                        Rs{balance}
+                    </Text>
                     <Spacer height={15} />
                     <ThemedView row>
                         {/* Income Metric */}
-                        <MetricCard title="Income" />
+                        <MetricCard title="Income" amount={summary.income} />
 
                         <Spacer height="100%" width={10} />
 
                         {/* Expense Metric */}
-                        <MetricCard title="Expense" income={false} />
+                        <MetricCard title="Expense" isIncome={false} amount={summary.expense} />
                     </ThemedView>
                 </ThemedView>
 
                 {/* Period Selector */}
                 <Spacer height={20} />
-                <PeriodSelector onNext={() => {}} onPrevious={() => {}} />
+                <PeriodSelector
+                    title={format(selectedMonth, DateFormat.monthYear)}
+                    onNext={() =>
+                        thisMonth ? null : setSelectedMonth(addMonths(selectedMonth, 1))
+                    }
+                    onPrevious={() => setSelectedMonth(subMonths(selectedMonth, 1))}
+                />
 
                 {/* Transactions */}
                 <Spacer height={20} />
-                <WeekItem />
+
+                <FlatList
+                    keyExtractor={(item) => item.label}
+                    renderItem={({ item }) => <WeekItem weekGroup={item} />}
+                    ItemSeparatorComponent={() => <Spacer height={15} />}
+                    ListEmptyComponent={() => (
+                        <EmptyState
+                            icon="receipt-outline"
+                            title="No transactions found!"
+                            message="Tap + to add your transaction"
+                        />
+                    )}
+                    contentContainerStyle={Styles.listContent}
+                    data={weekGroups}
+                    style={Styles.list}
+                />
             </ThemedView>
 
             {/* FAB */}
@@ -101,6 +140,7 @@ const Styles = StyleSheet.create({
         flex: 1,
     },
     content: {
+        flex: 1,
         marginHorizontal: Spacing.pageHorizontalPadding,
     },
     balanceCard: {
@@ -120,5 +160,11 @@ const Styles = StyleSheet.create({
     balance: {
         ...Typography.displayLg,
         color: Colors.onPrimary,
+    },
+    list: {
+        flex: 1,
+    },
+    listContent: {
+        flexGrow: 1, // alows ListEmptyComponent to fill available height
     },
 })

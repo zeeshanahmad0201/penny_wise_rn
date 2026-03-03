@@ -15,7 +15,6 @@ import { initDatabase } from '@services/database'
 const RootLayout = () => {
     useEffect(() => {
         initDatabase()
-        // dropDatabase()
     }, [])
 
     const [fontsLoaded] = useFonts({
