@@ -17,7 +17,7 @@ type NumPadProps = {
 const COLUMNS = 3
 const GAP = 8
 const SCREEN_WIDTH = Dimensions.get('window').width
-const HORIZONTAL_PADDING = Spacing.pageHorizontalPadding * 2
+const HORIZONTAL_PADDING = Spacing.pageHorizontalSpacing * 2
 const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * COLUMNS) / COLUMNS
 const ITEM_HEIGHT = 50
 

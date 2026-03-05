@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { format } from 'date-fns'
 
@@ -21,61 +21,68 @@ import { categories } from '@data/categories'
 // utils
 import { withOpacity } from '@utils/colorUtils'
 
-const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
+type TransactionItemProps = {
+    transaction: Transaction
+    onPress: () => void
+}
+
+const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
     const isIncome = transaction.type === TransactionType.income
     const typeMeta = isIncome ? categories.income : categories.expense
     const category = typeMeta.at(transaction.categoryIndex)
     const defaultColor = Colors.text.normal
 
     return (
-        <ThemedView row>
-            {/* Prefix */}
-            <ThemedView
-                style={[
-                    Styles.iconBg,
-                    {
-                        backgroundColor: withOpacity(category?.color ?? defaultColor, 0.15),
-                    },
-                ]}
-            >
-                <Ionicons
-                    size={Spacing.iconMd}
-                    name={category?.icon ?? 'accessibility-sharp'}
-                    color={category?.color ?? defaultColor}
-                />
-            </ThemedView>
-
-            {/* Content */}
-            <Spacer width={15} />
-            <ThemedView style={Styles.content}>
-                <Text style={Styles.title} ellipsizeMode="tail" numberOfLines={1}>
-                    {category?.label}
-                </Text>
-
-                {transaction.notes && (
-                    <Text style={Styles.description} numberOfLines={1} ellipsizeMode="tail">
-                        {transaction.notes}
-                    </Text>
-                )}
-            </ThemedView>
-
-            {/* Suffix */}
-            <ThemedView style={Styles.suffix}>
-                <Text
-                    style={[Styles.amount, isIncome ? Styles.income : Styles.expense]}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
+        <TouchableOpacity onPress={onPress}>
+            <ThemedView row>
+                {/* Prefix */}
+                <ThemedView
+                    style={[
+                        Styles.iconBg,
+                        {
+                            backgroundColor: withOpacity(category?.color ?? defaultColor, 0.15),
+                        },
+                    ]}
                 >
-                    Rs{transaction.amount.toFixed(2)}
-                </Text>
+                    <Ionicons
+                        size={Spacing.iconMd}
+                        name={category?.icon ?? 'accessibility-sharp'}
+                        color={category?.color ?? defaultColor}
+                    />
+                </ThemedView>
 
-                <Spacer height={3} />
+                {/* Content */}
+                <Spacer width={15} />
+                <ThemedView style={Styles.content}>
+                    <Text style={Styles.title} ellipsizeMode="tail" numberOfLines={1}>
+                        {category?.label}
+                    </Text>
 
-                <Text style={Styles.date}>
-                    {format(transaction.createdAt, DateFormat.monthDay)}
-                </Text>
+                    {transaction.notes && (
+                        <Text style={Styles.notes} numberOfLines={1} ellipsizeMode="tail">
+                            {transaction.notes}
+                        </Text>
+                    )}
+                </ThemedView>
+
+                {/* Suffix */}
+                <ThemedView style={Styles.suffix}>
+                    <Text
+                        style={[Styles.amount, isIncome ? Styles.income : Styles.expense]}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                    >
+                        Rs{transaction.amount.toFixed(2)}
+                    </Text>
+
+                    <Spacer height={3} />
+
+                    <Text style={Styles.date}>
+                        {format(transaction.createdAt, DateFormat.monthDay)}
+                    </Text>
+                </ThemedView>
             </ThemedView>
-        </ThemedView>
+        </TouchableOpacity>
     )
 }
 
@@ -95,8 +102,8 @@ const Styles = StyleSheet.create({
     title: {
         ...Typography.bodyLg,
     },
-    description: {
-        ...Typography.bodyMd,
+    notes: {
+        ...Typography.bodySm,
         color: Colors.text.muted,
     },
     amount: {

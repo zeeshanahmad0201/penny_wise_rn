@@ -10,6 +10,7 @@ import {
     getTransactionsByMonth,
     insertTransaction,
     removeTransaction,
+    updateTransaction,
 } from '@services/transactionService'
 
 // state
@@ -87,6 +88,11 @@ const useTransactions = () => {
         await loadData()
     }
 
+    const editTransaction = async (transaction: Transaction) => {
+        await updateTransaction(transaction)
+        await loadData()
+    }
+
     return {
         transactions,
         weekGroups,
@@ -95,6 +101,7 @@ const useTransactions = () => {
         setSelectedMonth,
         addTransaction,
         deleteTransaction,
+        editTransaction,
     }
 }
 

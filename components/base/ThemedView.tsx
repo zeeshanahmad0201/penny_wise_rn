@@ -1,7 +1,7 @@
 import { ViewProps, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from '@constants/Colors'
-import Spacing from '@constants/Spacing';
+import Spacing from '@constants/Spacing'
 
 const ThemedView = ({
     style,
@@ -25,8 +25,8 @@ const Styles = StyleSheet.create({
     main: {
         flex: 1,
         width: '100%',
-        paddingHorizontal: Spacing.pageHorizontalPadding,
-        paddingVertical: Spacing.pageVerticalPadding,
+        paddingHorizontal: Spacing.pageHorizontalSpacing,
+        paddingVertical: Spacing.pageVerticalSpacing,
         backgroundColor: Colors.background,
     },
     centeredContent: {
@@ -35,6 +35,6 @@ const Styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 })

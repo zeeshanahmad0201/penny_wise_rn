@@ -24,8 +24,8 @@ export default FAB
 const Styles = StyleSheet.create({
     fab: {
         position: 'absolute',
-        bottom: Spacing.pageHorizontalPadding,
-        right: Spacing.pageHorizontalPadding,
+        bottom: Spacing.pageHorizontalSpacing,
+        right: Spacing.pageHorizontalSpacing,
         width: 56,
         height: 56,
         borderRadius: Spacing.radiusSm,

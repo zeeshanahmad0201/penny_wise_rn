@@ -2,7 +2,7 @@ import * as Crypto from 'expo-crypto'
 import { format } from 'date-fns'
 
 // services
-import db, { TRANSACTIONS_TABLE as TABLE_TRANSACTIONS } from '@services/database'
+import db, { TABLE_TRANSACTIONS } from '@services/database'
 
 // models
 import { Transaction, NewTransaction, TransactionType } from '@models/Transaction'
@@ -95,5 +95,25 @@ export const getTransactionsByMonth = async (
     } catch (error) {
         console.error('Failed to fetch transactions: ', error)
         throw new Error('Unable to fetch transactions. Please try again')
+    }
+}
+
+// Updates the transaction by id
+export const updateTransaction = async (transaction: Transaction) => {
+    try {
+        await db.runAsync(
+            `UPDATE ${TABLE_TRANSACTIONS} SET amount = ?, type = ?, category_index = ?, note = ?, created_at = ? WHERE id = ?`,
+            [
+                transaction.amount,
+                transaction.type,
+                transaction.categoryIndex,
+                transaction.notes ?? null,
+                format(transaction.createdAt, DateFormat.storage),
+                transaction.id,
+            ]
+        )
+    } catch (error) {
+        console.error('failed to update transaction', error)
+        throw new Error('Unable to update transaction. Please try again')
     }
 }

@@ -2,6 +2,8 @@ import { Image, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useRef, useState } from 'react'
 import { addMonths, format, subMonths } from 'date-fns'
+import { FlatList } from 'react-native-gesture-handler'
+import { router } from 'expo-router'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -11,6 +13,7 @@ import PeriodSelector from '@components/shared/PeriodSelector'
 import WeekItem from '@components/shared/WeekItem'
 import AppBottomSheet from '@components/ui/BottomSheet'
 import AddTransaction from '@components/shared/AddTransaction'
+import EmptyState from '@components/shared/EmptyState'
 
 // constants
 import { Colors } from '@constants/Colors'
@@ -25,13 +28,15 @@ import FAB from '@components/base/FAB'
 
 // hooks
 import useTransactions from '@hooks/useTransactions'
-import { FlatList } from 'react-native-gesture-handler'
-import EmptyState from '@components/shared/EmptyState'
+
+// models
+import { Transaction } from '@models/Transaction'
 
 const Home = () => {
     const bottomSheetRef = useRef<BottomSheet>(null)
     // Increment key to reset AddTransaction state when sheet closes
     const [sheetKey, setSheetKey] = useState(0)
+    const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>()
 
     const { summary, selectedMonth, setSelectedMonth, weekGroups } = useTransactions()
 
@@ -53,7 +58,19 @@ const Home = () => {
                 </ThemedView>
                 <Spacer height="100%" width={10} />
                 <Text style={Styles.appBarTitle}>PennyWise</Text>
+
+                {/* Settings */}
                 <Ionicons name="settings" size={Spacing.iconMd} color={Colors.iconColor} />
+
+                <Spacer height="100%" width={10} />
+
+                {/* Charts */}
+                <Ionicons
+                    name="stats-chart-outline"
+                    size={Spacing.iconMd}
+                    color={Colors.iconColor}
+                    onPress={() => router.push('/analytics')}
+                />
             </ThemedView>
 
             <ThemedView style={Styles.content}>
@@ -92,7 +109,15 @@ const Home = () => {
 
                 <FlatList
                     keyExtractor={(item) => item.label}
-                    renderItem={({ item }) => <WeekItem weekGroup={item} />}
+                    renderItem={({ item }) => (
+                        <WeekItem
+                            weekGroup={item}
+                            onTransactionPress={(transaction) => {
+                                setSelectedTransaction(transaction)
+                                bottomSheetRef.current?.expand()
+                            }}
+                        />
+                    )}
                     ItemSeparatorComponent={() => <Spacer height={15} />}
                     ListEmptyComponent={() => (
                         <EmptyState
@@ -108,14 +133,30 @@ const Home = () => {
             </ThemedView>
 
             {/* FAB */}
-            <FAB icon="add" onPress={() => bottomSheetRef.current?.expand()} />
+            <FAB
+                icon="add"
+                onPress={() => {
+                    setSelectedTransaction(undefined)
+                    bottomSheetRef.current?.expand()
+                }}
+            />
             <AppBottomSheet
                 ref={bottomSheetRef}
                 onChange={(index) => {
-                    if (index === -1) setSheetKey((prev) => prev + 1)
+                    if (index === -1) {
+                        setSheetKey((prev) => prev + 1)
+                        setSelectedTransaction(undefined)
+                    }
                 }}
             >
-                <AddTransaction key={sheetKey} onClose={() => bottomSheetRef.current?.close()} />
+                <AddTransaction
+                    key={sheetKey}
+                    onClose={() => {
+                        bottomSheetRef.current?.close()
+                        setSelectedTransaction(undefined)
+                    }}
+                    transaction={selectedTransaction}
+                />
             </AppBottomSheet>
         </ThemedView>
     )
@@ -125,8 +166,8 @@ export default Home
 
 const Styles = StyleSheet.create({
     appBar: {
-        paddingVertical: Spacing.pageVerticalPadding,
-        paddingHorizontal: Spacing.pageHorizontalPadding,
+        paddingVertical: Spacing.pageVerticalSpacing,
+        paddingHorizontal: Spacing.pageHorizontalSpacing,
         alignItems: 'center',
     },
     appBarLogo: {
@@ -141,11 +182,11 @@ const Styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        marginHorizontal: Spacing.pageHorizontalPadding,
+        marginHorizontal: Spacing.pageHorizontalSpacing,
     },
     balanceCard: {
         backgroundColor: Colors.primary,
-        padding: Spacing.pageHorizontalPadding,
+        padding: Spacing.pageHorizontalSpacing,
         borderRadius: Spacing.radiusMd,
         alignItems: 'center',
         shadowColor: Colors.primary,

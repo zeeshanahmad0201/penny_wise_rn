@@ -1,6 +1,6 @@
 import { StyleSheet, TouchableOpacity, Text } from 'react-native'
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -26,6 +26,14 @@ const SegmentedControl = ({ options, selected, onSelect }: SegmentedControlProps
     const pillWidth = useSharedValue(0)
     const pillColor = useSharedValue(selected.selectedColor ?? Colors.primary)
     const layouts = useRef<Map<string, { x: number; width: number }>>(new Map())
+
+    useEffect(() => {
+        const layout = layouts.current.get(selected.key)
+        if (layout) {
+            pillX.value = withSpring(layout.x)
+            pillWidth.value = withSpring(layout.width)
+        }
+    }, [selected, pillX, pillWidth])
 
     const animatedPillStyle = useAnimatedStyle(() => ({
         transform: [{ translateX: pillX.value }],
@@ -101,7 +109,7 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: Spacing.spacingSm,
-        paddingVertical: Spacing.pageVerticalPadding,
+        paddingVertical: Spacing.pageVerticalSpacing,
         borderRadius: Spacing.radiusMd,
     },
     pill: {

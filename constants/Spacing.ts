@@ -1,7 +1,7 @@
 const Spacing = {
     // Page
-    pageHorizontalPadding: 24,
-    pageVerticalPadding: 12,
+    pageHorizontalSpacing: 24,
+    pageVerticalSpacing: 12,
 
     // Spacing
     spacingSm: 4,

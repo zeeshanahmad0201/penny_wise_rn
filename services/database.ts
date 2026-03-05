@@ -2,11 +2,11 @@ import * as SQLite from 'expo-sqlite'
 
 const db = SQLite.openDatabaseSync('pennywise.db')
 
-export const TRANSACTIONS_TABLE = 'transactions'
+export const TABLE_TRANSACTIONS = 'transactions'
 
 export const initDatabase = () => {
     db.execSync(`
-        CREATE TABLE IF NOT EXISTS ${TRANSACTIONS_TABLE} (
+        CREATE TABLE IF NOT EXISTS ${TABLE_TRANSACTIONS} (
             id TEXT PRIMARY KEY NOT NULL,
             amount REAL NOT NULL,
             category_index INTEGER NOT NULL,
@@ -18,7 +18,7 @@ export const initDatabase = () => {
 }
 
 export const dropDatabase = () => {
-    db.execSync(`DROP TABLE IF EXISTS ${TRANSACTIONS_TABLE}`)
+    db.execSync(`DROP TABLE IF EXISTS ${TABLE_TRANSACTIONS}`)
     initDatabase()
 }
 

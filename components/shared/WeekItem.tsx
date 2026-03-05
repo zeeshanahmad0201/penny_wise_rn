@@ -8,16 +8,17 @@ import Spacer from '@components/base/Spacer'
 // constants
 import { Colors } from '@constants/Colors'
 import { Typography } from '@constants/Typography'
+import Spacing from '@constants/Spacing'
 
 // models
-import { WeekGroup } from '@models/Transaction'
-import Spacing from '@constants/Spacing'
+import { Transaction, WeekGroup } from '@models/Transaction'
 
 type WeekItemProps = {
     weekGroup: WeekGroup
+    onTransactionPress: (transaction: Transaction) => void
 }
 
-const WeekItem = ({ weekGroup }: WeekItemProps) => {
+const WeekItem = ({ weekGroup, onTransactionPress }: WeekItemProps) => {
     return (
         <ThemedView>
             {/* Week Range */}
@@ -30,7 +31,10 @@ const WeekItem = ({ weekGroup }: WeekItemProps) => {
                 {weekGroup.transactions.map((transaction, index) => {
                     return (
                         <ThemedView key={transaction.id}>
-                            <TransactionItem transaction={transaction} />
+                            <TransactionItem
+                                transaction={transaction}
+                                onPress={() => onTransactionPress(transaction)}
+                            />
 
                             {/* Show separator except the last */}
                             {index !== weekGroup.transactions.length - 1 && (

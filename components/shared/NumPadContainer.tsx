@@ -28,6 +28,10 @@ export type NumPadContainerProps = {
     isIncome: boolean
     onSubmit: (payload: TransactionPayload) => void
     isLoading: boolean
+    defaultAmount?: string
+    defaultNotes?: string
+    defaultDate?: Date
+    onDelete?: () => void
 }
 
 export type TransactionPayload = {
@@ -36,7 +40,16 @@ export type TransactionPayload = {
     notes: string
 }
 
-const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadContainerProps) => {
+const NumPadContainer = ({
+    isVisible,
+    isIncome,
+    onSubmit,
+    isLoading,
+    defaultAmount,
+    defaultNotes,
+    defaultDate,
+    onDelete,
+}: NumPadContainerProps) => {
     const [amount, setAmount] = useState<string>('0')
     const [notes, setNotes] = useState<string>('')
     const [show, setShow] = useState<boolean>(false)
@@ -49,6 +62,12 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
     useEffect(() => {
         translateY.value = isVisible ? withSpring(0) : withTiming(1000)
     }, [isVisible, translateY])
+
+    useEffect(() => {
+        if (defaultAmount) setAmount(defaultAmount)
+        if (defaultNotes) setNotes(defaultNotes)
+        if (defaultDate) setDate(defaultDate)
+    }, [defaultAmount, defaultNotes, defaultDate])
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ translateY: translateY.value }],
@@ -112,6 +131,7 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
                 <ThemedView row>
                     {/* Note */}
                     <TextInput
+                        value={notes}
                         placeholder="Note (optional)"
                         onChangeText={(value) => setNotes(value)}
                         autoCapitalize="words"
@@ -122,6 +142,7 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
                     <DateTimePickerModal
                         isVisible={show}
                         mode="date"
+                        date={date}
                         maximumDate={new Date()}
                         onConfirm={(selectedDate) => {
                             setDate(selectedDate)
@@ -149,17 +170,34 @@ const NumPadContainer = ({ isVisible, isIncome, onSubmit, isLoading }: NumPadCon
                 {/* Numpad */}
                 <NumPad onClear={onClear} onNumberPress={handleNumberPress} />
 
-                <Button
-                    title={isLoading ? 'Saving...' : 'Save'}
-                    onPress={handleSubmit}
-                    style={[
-                        Styles.button,
-                        isValidAmount && {
-                            backgroundColor: isIncome ? Colors.success : Colors.error,
-                        },
-                    ]}
-                    disabled={!isValidAmount || isLoading}
-                />
+                <ThemedView row style={Styles.buttonContainer}>
+                    {/* Save */}
+                    <Button
+                        title={isLoading ? 'Saving...' : 'Save'}
+                        onPress={handleSubmit}
+                        style={[
+                            Styles.button,
+                            isValidAmount && {
+                                backgroundColor: isIncome ? Colors.success : Colors.error,
+                            },
+                        ]}
+                        disabled={!isValidAmount || isLoading}
+                    />
+
+                    {onDelete && (
+                        <TouchableOpacity onPress={onDelete}>
+                            {/* Delete */}
+                            <Ionicons
+                                name="trash-outline"
+                                size={Spacing.iconMd}
+                                color={Colors.white.normal}
+                                style={Styles.delete}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </ThemedView>
+
+                <Spacer height={10} />
             </ThemedView>
         </Animated.View>
     )
@@ -180,7 +218,7 @@ const Styles = StyleSheet.create({
     },
     amountContainer: {
         backgroundColor: Colors.background,
-        marginHorizontal: Spacing.pageHorizontalPadding,
+        marginHorizontal: Spacing.pageHorizontalSpacing,
         borderRadius: Spacing.radiusSm,
         padding: Spacing.spacingMd,
     },
@@ -195,20 +233,29 @@ const Styles = StyleSheet.create({
         paddingHorizontal: Spacing.spacingMd,
         paddingVertical: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        marginLeft: Spacing.pageHorizontalPadding,
+        marginLeft: Spacing.pageHorizontalSpacing,
         marginRight: Spacing.spacingSm,
     },
     datePicker: {
         paddingHorizontal: Spacing.spacingMd,
         paddingVertical: Spacing.spacingMd,
         backgroundColor: Colors.background,
-        marginRight: Spacing.pageHorizontalPadding,
+        marginRight: Spacing.pageHorizontalSpacing,
         borderRadius: Spacing.radiusSm,
     },
     datePickerText: {
         ...Typography.labelMd,
     },
+    buttonContainer: {
+        marginHorizontal: Spacing.pageHorizontalSpacing,
+    },
     button: {
-        marginHorizontal: Spacing.pageHorizontalPadding,
+        flex: 1,
+        marginRight: Spacing.spacingSm,
+    },
+    delete: {
+        backgroundColor: Colors.error,
+        padding: Spacing.spacingMd,
+        borderRadius: Spacing.radiusSm,
     },
 })

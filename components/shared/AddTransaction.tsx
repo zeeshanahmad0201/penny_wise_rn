@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 
@@ -15,7 +15,7 @@ import { transactionTypes } from '@data/transactionTypes'
 import { categories } from '@data/categories'
 
 // models
-import { TransactionType } from '@models/Transaction'
+import { Transaction, TransactionType } from '@models/Transaction'
 import { Category } from '@models/Category'
 
 // constants
@@ -26,9 +26,10 @@ import useTransactions from '@hooks/useTransactions'
 
 type AddTransactionProps = {
     onClose: () => void
+    transaction?: Transaction
 }
 
-const AddTransaction = ({ onClose }: AddTransactionProps) => {
+const AddTransaction = ({ onClose, transaction }: AddTransactionProps) => {
     const [option, selectOption] = useState<SegmentedOption>(transactionTypes[0])
     const [category, selectCategory] = useState<Category | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -37,7 +38,20 @@ const AddTransaction = ({ onClose }: AddTransactionProps) => {
     const isIncome = option.key === TransactionType.income
     const filteredCategories = isIncome ? categories.income : categories.expense
 
-    const { addTransaction } = useTransactions()
+    useEffect(() => {
+        if (transaction) {
+            const cats =
+                transaction.type === TransactionType.income ? categories.income : categories.expense
+            selectCategory(cats[transaction!.categoryIndex])
+            const trOption =
+                transaction.type === TransactionType.income
+                    ? transactionTypes[0]
+                    : transactionTypes[1]
+            selectOption(trOption)
+        }
+    }, [transaction])
+
+    const { addTransaction, editTransaction, deleteTransaction } = useTransactions()
 
     const handleSubmit = async ({ amount, date, notes }: TransactionPayload) => {
         setError(null)
@@ -49,20 +63,39 @@ const AddTransaction = ({ onClose }: AddTransactionProps) => {
 
         try {
             setLoading(true)
-            await addTransaction({
+            const newTransaction = {
                 amount,
                 notes,
                 createdAt: date,
                 categoryIndex: filteredCategories.indexOf(category),
                 type: isIncome ? TransactionType.income : TransactionType.expense,
-            })
-
-            // TODO: remove it once the home ui is functional
-            console.log('Transaction added successfully')
+            }
+            if (transaction) {
+                await editTransaction({
+                    id: transaction.id,
+                    ...newTransaction,
+                })
+            } else {
+                await addTransaction(newTransaction)
+            }
 
             onClose()
         } catch (error: any) {
-            setError(error instanceof Error ? error.message : 'Somthing went wrong!')
+            setError(error instanceof Error ? error.message : 'Something went wrong!')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!transaction) return
+        setError(null)
+        try {
+            setLoading(true)
+            await deleteTransaction(transaction.id)
+            onClose()
+        } catch (error: any) {
+            setError(error.message)
         } finally {
             setLoading(false)
         }
@@ -107,6 +140,10 @@ const AddTransaction = ({ onClose }: AddTransactionProps) => {
                 isIncome={isIncome}
                 onSubmit={handleSubmit}
                 isLoading={isLoading}
+                defaultAmount={transaction?.amount.toString()}
+                defaultDate={transaction?.createdAt}
+                defaultNotes={transaction?.notes}
+                onDelete={transaction && handleDelete}
             />
         </ThemedView>
     )
@@ -119,14 +156,14 @@ const Styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        paddingHorizontal: Spacing.pageHorizontalPadding,
-        paddingVertical: Spacing.pageVerticalPadding,
+        paddingHorizontal: Spacing.pageHorizontalSpacing,
+        paddingVertical: Spacing.pageVerticalSpacing,
     },
     categoriesGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: Spacing.spacingMd,
-        padding: Spacing.pageHorizontalPadding,
+        padding: Spacing.pageHorizontalSpacing,
     },
     list: {
         flex: 1,

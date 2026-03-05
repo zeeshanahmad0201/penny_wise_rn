@@ -19,7 +19,7 @@ import { Typography } from '@constants/Typography'
 export const COLUMNS = 4
 export const GAP = Spacing.spacingMd
 const SCREEN_WIDTH = Dimensions.get('window').width
-const HORIZONTAL_PADDING = Spacing.pageHorizontalPadding * 2
+const HORIZONTAL_PADDING = Spacing.pageHorizontalSpacing * 2
 const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * (COLUMNS - 1)) / COLUMNS
 
 export type CategoryItemProps = { category: Category; selected?: boolean; onPress: () => void }
