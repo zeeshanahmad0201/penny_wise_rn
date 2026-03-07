@@ -12,6 +12,7 @@ import Spacing from '@constants/Spacing'
 
 // models
 import { Transaction, WeekGroup } from '@models/Transaction'
+import { Border } from '@constants/Border'
 
 type WeekItemProps = {
     weekGroup: WeekGroup
@@ -59,8 +60,8 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.white.normal,
         padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        borderWidth: Spacing.borderWidth,
-        borderColor: Colors.text.subtle,
+        borderWidth: Border.width,
+        borderColor: Border.color,
     },
     separator: {
         marginVertical: 15,

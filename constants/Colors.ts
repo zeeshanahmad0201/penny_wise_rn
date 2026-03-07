@@ -4,7 +4,7 @@ export const Colors = {
     background: '#F9FAFB',
     error: '#EF4444',
     success: '#10B981',
-    iconColor: 'gray',
+    iconColor: '#6B7280',
 
     white: {
         subtle: 'rgba(255, 255, 255, 0.15)',

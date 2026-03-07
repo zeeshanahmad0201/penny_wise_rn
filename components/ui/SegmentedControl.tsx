@@ -9,6 +9,7 @@ import ThemedView from '@components/base/ThemedView'
 import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+import { Elevation } from '@constants/Elevation'
 
 export type SegmentedOption = {
     key: string
@@ -99,10 +100,7 @@ const Styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.white.normal,
         borderRadius: Spacing.radiusMd,
-        shadowColor: Colors.text.muted,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
+        ...Elevation.sm,
     },
     option: {
         flex: 1,

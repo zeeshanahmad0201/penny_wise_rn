@@ -9,6 +9,7 @@ import Spacer from '@components/base/Spacer'
 import Spacing from '@constants/Spacing'
 import { Colors } from '@constants/Colors'
 import { Typography } from '@constants/Typography'
+import { Border } from '@constants/Border'
 
 const MetricCard = ({
     title,
@@ -43,7 +44,7 @@ export default MetricCard
 const Styles = StyleSheet.create({
     container: {
         borderColor: Colors.white.normal,
-        borderWidth: Spacing.borderWidth,
+        borderWidth: Border.width,
         flex: 1,
         padding: Spacing.spacingMd,
         backgroundColor: Colors.white.subtle,
