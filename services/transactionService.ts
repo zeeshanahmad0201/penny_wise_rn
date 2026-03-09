@@ -152,3 +152,21 @@ export const getLast6Months = async (): Promise<MonthSummary[]> => {
         throw new Error('Unable to fetch the records!')
     }
 }
+
+export const getAllTransactions = async (): Promise<Transaction[]> => {
+    try {
+        const rows = await db.getAllAsync<TransactionRow>(`SELECT * FROM ${TABLE_TRANSACTIONS}`)
+
+        return rows.map((row) => ({
+            id: row.id,
+            amount: row.amount,
+            categoryIndex: row.category_index,
+            type: row.type,
+            notes: row.note ?? undefined,
+            createdAt: new Date(row.created_at),
+        }))
+    } catch (error: any) {
+        console.log('Failed to fetch transactions: ', error)
+        throw new Error('Unable to fetch all transactions at this moment! Please try again.')
+    }
+}

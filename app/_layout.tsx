@@ -8,6 +8,7 @@ import {
     useFonts,
 } from '@expo-google-fonts/poppins'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
 
 // services
 import { initDatabase } from '@services/database'
@@ -40,6 +41,7 @@ const RootLayout = () => {
                     options={{ title: 'Settings', headerBackButtonDisplayMode: 'minimal' }}
                 />
             </Stack>
+            <Toast />
         </GestureHandlerRootView>
     )
 }
