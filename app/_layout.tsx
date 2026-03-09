@@ -35,6 +35,10 @@ const RootLayout = () => {
                     name="analytics"
                     options={{ title: 'Analytics', headerBackButtonDisplayMode: 'minimal' }}
                 />
+                <Stack.Screen
+                    name="settings"
+                    options={{ title: 'Settings', headerBackButtonDisplayMode: 'minimal' }}
+                />
             </Stack>
         </GestureHandlerRootView>
     )

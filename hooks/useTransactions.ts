@@ -72,7 +72,13 @@ const useTransactions = () => {
         setTransactions(rows)
         setSummary(monthSummary)
         setWeekGroups(buildWeekGroups(rows))
-    }, [selectedMonth, setSummary, setTransactions, setWeekGroups, buildWeekGroups])
+    }, [
+        selectedMonth,
+        setSummary,
+        setTransactions,
+        setWeekGroups,
+        buildWeekGroups,
+    ])
 
     useEffect(() => {
         loadData()

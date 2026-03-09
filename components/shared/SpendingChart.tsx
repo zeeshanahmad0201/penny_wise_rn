@@ -1,8 +1,11 @@
 import { StyleSheet, Text } from 'react-native'
 import { BarChart } from 'react-native-gifted-charts'
+import { format, parse } from 'date-fns'
 
 // components
 import ThemedView from '@components/base/ThemedView'
+import Spacer from '@components/base/Spacer'
+import Legend from '@components/shared/Legend'
 
 // constants
 import { Colors } from '@constants/Colors'
@@ -10,18 +13,13 @@ import Spacing from '@constants/Spacing'
 import { Elevation } from '@constants/Elevation'
 import { Border } from '@constants/Border'
 import { Typography } from '@constants/Typography'
-import Spacer from '@components/base/Spacer'
-import Legend from '@components/shared/Legend'
+
+// hooks
+import useAnalytics from '@hooks/useAnalytics'
+import { DateFormat } from '@constants/DateFormat'
 
 const SpendingChart = () => {
-    const data = [
-        { month: 'Oct', income: 3000, expense: 1500 },
-        { month: 'Nov', income: 2000, expense: 2500 },
-        { month: 'Dec', income: 4000, expense: 1000 },
-        { month: 'Jan', income: 1500, expense: 3000 },
-        { month: 'Feb', income: 3500, expense: 2000 },
-        { month: 'Mar', income: 2500, expense: 1800 },
-    ]
+    const { last6MonthsSummary } = useAnalytics()
 
     return (
         <ThemedView style={Styles.container}>
@@ -38,10 +36,10 @@ const SpendingChart = () => {
                 endSpacing={0}
                 yAxisLabelWidth={0}
                 isAnimated
-                data={data.flatMap((item) => [
+                data={last6MonthsSummary.flatMap((item) => [
                     {
                         value: item.income,
-                        label: item.month,
+                        label: format(parse(item.month, 'yyyy-MM', new Date()), DateFormat.month),
                         frontColor: Colors.success,
                         spacing: 2,
                         labelWidth: 40,
@@ -72,15 +70,14 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.white.normal,
         padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        borderWidth: Border.width,
-        borderColor: Border.color,
+        ...Border,
         ...Elevation.sm,
     },
     title: {
         ...Typography.titleSm,
     },
     divider: {
-        backgroundColor: Border.color,
+        backgroundColor: Border.borderColor,
         height: 1,
     },
 })

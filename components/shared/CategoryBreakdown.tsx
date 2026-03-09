@@ -1,8 +1,13 @@
 import { Text, StyleSheet } from 'react-native'
+import { PieChart } from 'react-native-gifted-charts'
+import { format, parse } from 'date-fns'
+import { Fragment } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
 import MonthSelector from '@components/shared/MonthSelector'
+import Spacer from '@components/base/Spacer'
+import BreakdownTile from '@components/shared/BreakdownTile'
 
 // constants
 import { Typography } from '@constants/Typography'
@@ -10,60 +15,112 @@ import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Border } from '@constants/Border'
 import { Elevation } from '@constants/Elevation'
-import { PieChart } from 'react-native-gifted-charts'
-import Spacer from '@components/base/Spacer'
-import BreakdownTile from './BreakdownTile'
-import { categories } from '@data/categories'
+import { DateFormat } from '@constants/DateFormat'
+
+// hooks
+import useAnalytics from '@hooks/useAnalytics'
+
+// utils
+import { getCategory } from '@utils/categoryUtils'
+import EmptyState from './EmptyState'
 
 const CategoryBreakdown = () => {
-    const pieData = [
-        { value: 54, color: '#177AD5', text: '54%' },
-        { value: 40, color: '#79D2DE', text: '30%' },
-        { value: 20, color: '#ED6665', text: '26%' },
-    ]
+    const { transactions, selectedMonth, updateSelectedMonth } = useAnalytics()
+
+    const total = transactions.reduce((sum, item) => sum + item.amount, 0)
+
+    const handleSelect = (monthYear: string) => {
+        const newSelectedMonth = parse(monthYear, DateFormat.monthYear, new Date())
+        updateSelectedMonth(newSelectedMonth)
+    }
+
+    const categoryTotals = transactions.map((transaction) => ({
+        amount: transaction.amount,
+        category: getCategory(transaction.type, transaction.categoryIndex),
+    }))
+
+    const pieData = categoryTotals.map((item) => ({
+        value: item.amount,
+        color: item.category.color,
+    }))
 
     return (
         <ThemedView>
             {/* Month Picker */}
-            <MonthSelector />
+            <MonthSelector
+                onSelect={handleSelect}
+                selectedMonthYear={format(selectedMonth, DateFormat.monthYear)}
+            />
 
             <Spacer height={25} />
 
             {/* Breakdown */}
             <ThemedView style={Styles.container}>
-                <ThemedView row>
-                    <Text style={Styles.title}>Category Breakdown</Text>
-                    <Text style={Styles.subtitle}>February 2026</Text>
-                </ThemedView>
-
-                <Spacer height={30} />
-
-                <ThemedView style={Styles.pieContainer}>
-                    <PieChart
-                        donut
-                        data={pieData}
-                        radius={70}
-                        innerRadius={50}
-                        centerLabelComponent={() => {
-                            return (
-                                <ThemedView centeredContent>
-                                    <Text style={Styles.pieSubtitle}>Total</Text>
-                                    <Text
-                                        style={Styles.pieTitle}
-                                        numberOfLines={1}
-                                        adjustsFontSizeToFit
-                                    >
-                                        Rs1000
-                                    </Text>
-                                </ThemedView>
-                            )
-                        }}
+                {transactions.length === 0 ? (
+                    <EmptyState
+                        icon="receipt-outline"
+                        title={'No transactions found!'}
+                        message={`You have not added any transactions for ${format(selectedMonth, DateFormat.monthYear)}`}
                     />
+                ) : (
+                    <>
+                        <ThemedView row>
+                            <Text style={Styles.title}>Category Breakdown</Text>
+                            <Text style={Styles.subtitle}>
+                                {format(selectedMonth, DateFormat.monthYear)}
+                            </Text>
+                        </ThemedView>
 
-                    <Spacer />
+                        <Spacer height={30} />
 
-                    <BreakdownTile category={categories.income[0]} amount={100} percentage={23} />
-                </ThemedView>
+                        <ThemedView style={Styles.pieContainer}>
+                            <PieChart
+                                donut
+                                data={pieData}
+                                radius={70}
+                                innerRadius={50}
+                                centerLabelComponent={() => {
+                                    return (
+                                        <ThemedView centeredContent>
+                                            <Text style={Styles.pieSubtitle}>Total</Text>
+                                            <Text
+                                                style={Styles.pieTitle}
+                                                numberOfLines={1}
+                                                adjustsFontSizeToFit
+                                            >
+                                                Rs{total}
+                                            </Text>
+                                        </ThemedView>
+                                    )
+                                }}
+                            />
+
+                            <Spacer />
+
+                            {transactions.map((transaction, index) => (
+                                <Fragment key={transaction.id}>
+                                    <BreakdownTile
+                                        category={getCategory(
+                                            transaction.type,
+                                            transaction.categoryIndex
+                                        )}
+                                        amount={transaction.amount}
+                                        percentage={
+                                            total === 0
+                                                ? 0
+                                                : parseFloat(
+                                                      ((transaction.amount / total) * 100).toFixed(
+                                                          2
+                                                      )
+                                                  )
+                                        }
+                                    />
+                                    {index !== transactions.length - 1 && <Spacer />}
+                                </Fragment>
+                            ))}
+                        </ThemedView>
+                    </>
+                )}
             </ThemedView>
         </ThemedView>
     )
@@ -76,8 +133,7 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.white.normal,
         padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        borderWidth: Border.width,
-        borderColor: Border.color,
+        ...Border,
         ...Elevation.sm,
     },
     title: {

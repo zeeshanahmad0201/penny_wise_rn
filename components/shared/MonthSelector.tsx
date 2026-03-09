@@ -1,22 +1,41 @@
-import { FlatList } from 'react-native'
+import { FlatList, StyleSheet } from 'react-native'
 
-import MonthTile from './MonthTile'
+// components
+import Spacer from '@components/base/Spacer'
+import ThemedView from '@components/base/ThemedView'
+import MonthTile from '@components/shared/MonthTile'
+
+// constants
 import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
-import Spacer from '@components/base/Spacer'
 import { Elevation } from '@constants/Elevation'
 import { Border } from '@constants/Border'
-import ThemedView from '@components/base/ThemedView'
+import { format, subMonths } from 'date-fns'
+import { DateFormat } from '@constants/DateFormat'
 
-const MonthSelector = () => {
-    const months = ['February 2026', 'January 2026', 'December 2025', 'November 2025', 'Oct 2025']
+type MonthSelectorProps = {
+    onSelect: (monthYear: string) => void
+    selectedMonthYear: string
+}
+
+const MonthSelector = ({ onSelect, selectedMonthYear }: MonthSelectorProps) => {
+    const now = new Date()
+    const months = Array.from({ length: 6 }, (_, index) =>
+        format(subMonths(now, index), DateFormat.monthYear)
+    )
+    const selectedIndex = months.indexOf(selectedMonthYear)
+
     return (
         <ThemedView style={Styles.container}>
             <FlatList
                 data={months}
                 keyExtractor={(item) => item}
                 renderItem={({ item, index }) => (
-                    <MonthTile title={item} onPress={() => {}} isActive={index === 0} />
+                    <MonthTile
+                        title={item}
+                        onPress={() => onSelect(item)}
+                        isActive={index === selectedIndex}
+                    />
                 )}
                 ItemSeparatorComponent={() => <Spacer width={5} height={0} />}
                 horizontal
@@ -27,13 +46,12 @@ const MonthSelector = () => {
 
 export default MonthSelector
 
-const Styles = {
+const Styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.white.normal,
         padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        borderWidth: Border.width,
-        borderColor: Border.color,
+        ...Border,
         ...Elevation.sm,
     },
-}
+})

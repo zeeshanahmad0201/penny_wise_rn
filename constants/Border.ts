@@ -1,4 +1,4 @@
 export const Border = {
-    width: 0.2,
-    color: '#E5E7EB',
+    borderWidth: 0.2,
+    borderColor: '#E5E7EB',
 }

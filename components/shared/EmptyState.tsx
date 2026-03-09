@@ -20,7 +20,7 @@ const EmptyState = ({ icon, title, message }: EmptyStateProps) => {
             {icon && (
                 <>
                     <Ionicons name={icon} size={Spacing.iconLg} />
-                    <Spacer height={20} />
+                    <Spacer height={10} />
                 </>
             )}
 
@@ -40,11 +40,16 @@ export default EmptyState
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 20,
     },
     title: {
         ...Typography.titleMd,
+        textAlign: 'center',
     },
     message: {
         ...Typography.bodyMd,
+        textAlign: 'center',
     },
 })

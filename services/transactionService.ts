@@ -1,12 +1,12 @@
 import * as Crypto from 'expo-crypto'
-import { format } from 'date-fns'
+import { format, subMonths } from 'date-fns'
 
 // services
 import db, { TABLE_TRANSACTIONS } from '@services/database'
 
 // models
 import { Transaction, NewTransaction, TransactionType } from '@models/Transaction'
-import { Summary } from '@models/Summary'
+import { Summary, MonthSummary } from '@models/Summary'
 
 // constants
 import { DateFormat } from '@constants/DateFormat'
@@ -21,6 +21,12 @@ type TransactionRow = {
     category_index: number
     note: string | null
     created_at: string
+}
+
+type MonthSummaryRow = {
+    month: string
+    income: number
+    expense: number
 }
 
 export const insertTransaction = async (transaction: NewTransaction) => {
@@ -115,5 +121,34 @@ export const updateTransaction = async (transaction: Transaction) => {
     } catch (error) {
         console.error('failed to update transaction', error)
         throw new Error('Unable to update transaction. Please try again')
+    }
+}
+
+// Fetch last 6 months of balance
+export const getLast6Months = async (): Promise<MonthSummary[]> => {
+    try {
+        const now = new Date()
+        const sixMonthsAgo = subMonths(now, 5)
+
+        const response = await db.getAllAsync<MonthSummaryRow>(
+            `SELECT strftime('%Y-%m', created_at) as month,
+                SUM(CASE WHEN type = 'Income' THEN amount ELSE 0 END) as income,
+                SUM(CASE WHEN type = 'Expense' THEN amount ELSE 0 END) as expense
+                FROM ${TABLE_TRANSACTIONS}
+                WHERE created_at >= ?
+                GROUP BY month
+                ORDER BY month ASC
+            `,
+            [format(sixMonthsAgo, DateFormat.storage)]
+        )
+
+        return response.map((row) => ({
+            month: row.month,
+            expense: row.expense,
+            income: row.income,
+        }))
+    } catch (error) {
+        console.error('Failed to fetch data for past 6 months', error)
+        throw new Error('Unable to fetch the records!')
     }
 }

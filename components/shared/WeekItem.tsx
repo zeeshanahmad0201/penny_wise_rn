@@ -60,8 +60,7 @@ const Styles = StyleSheet.create({
         backgroundColor: Colors.white.normal,
         padding: Spacing.spacingMd,
         borderRadius: Spacing.radiusSm,
-        borderWidth: Border.width,
-        borderColor: Border.color,
+        ...Border,
     },
     separator: {
         marginVertical: 15,

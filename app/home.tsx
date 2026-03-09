@@ -47,7 +47,7 @@ const Home = () => {
         selectedMonth.getMonth() === now.getMonth()
 
     return (
-        <ThemedView main style={{ paddingHorizontal: 0 }}>
+        <ThemedView main style={{ paddingHorizontal: 0 }} edges={['bottom', 'left', 'right', 'top']}>
             {/* AppBar */}
             <ThemedView row style={Styles.appBar}>
                 <ThemedView style={Styles.appBarLogo}>
@@ -60,7 +60,12 @@ const Home = () => {
                 <Text style={Styles.appBarTitle}>PennyWise</Text>
 
                 {/* Settings */}
-                <Ionicons name="settings" size={Spacing.iconMd} color={Colors.iconColor} />
+                <Ionicons
+                    name="settings"
+                    size={Spacing.iconMd}
+                    color={Colors.iconColor}
+                    onPress={() => router.push('/settings')}
+                />
 
                 <Spacer height="100%" width={10} />
 
