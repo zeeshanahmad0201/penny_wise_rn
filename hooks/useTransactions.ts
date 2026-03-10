@@ -12,6 +12,7 @@ import {
     removeTransaction,
     updateTransaction,
     getAllTransactions,
+    deleteAll,
 } from '@services/transactionService'
 
 // state
@@ -30,6 +31,7 @@ const useTransactions = () => {
         setTransactions,
         setWeekGroups,
         setSummary,
+        clear,
     } = useTransactionsStore()
 
     const buildWeekGroups = useCallback((rows: Transaction[]): WeekGroup[] => {
@@ -94,6 +96,12 @@ const useTransactions = () => {
         await loadData()
     }
 
+    const resetAll = async () => {
+        await deleteAll()
+        clear()
+        await loadData()
+    }
+
     return {
         transactions,
         weekGroups,
@@ -104,6 +112,7 @@ const useTransactions = () => {
         deleteTransaction,
         editTransaction,
         getAllTransactions,
+        resetAll,
     }
 }
 

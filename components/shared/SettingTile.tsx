@@ -19,7 +19,7 @@ type SettingTileProps = {
     prefixColor?: string
     title: string
     subtitle: string
-    suffixIcon: keyof typeof Ionicons.glyphMap | ReactElement
+    suffixIcon?: keyof typeof Ionicons.glyphMap | ReactElement
     onPress: () => void
 }
 
@@ -28,7 +28,7 @@ const SettingTile = ({
     prefixColor = Colors.iconColor,
     title,
     subtitle,
-    suffixIcon,
+    suffixIcon = 'chevron-forward',
     onPress,
 }: SettingTileProps) => {
     return (

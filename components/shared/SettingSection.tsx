@@ -38,7 +38,7 @@ export default SettingSection
 
 const Styles = StyleSheet.create({
     title: {
-        ...Typography.labelMd,
+        ...Typography.labelLg,
         color: Colors.text.muted,
     },
     section: {

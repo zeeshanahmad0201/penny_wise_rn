@@ -14,6 +14,7 @@ type TransactionStore = {
     setWeekGroups: (weekGroups: WeekGroup[]) => void
     setSummary: (summary: Summary) => void
     setSelectedMonth: (month: Date) => void
+    clear: () => void
 }
 
 const useTransactionsStore = create<TransactionStore>((set) => ({
@@ -26,6 +27,13 @@ const useTransactionsStore = create<TransactionStore>((set) => ({
     setWeekGroups: (weekGroups) => set({ weekGroups }),
     setSummary: (summary) => set({ summary }),
     setSelectedMonth: (month) => set({ selectedMonth: month }),
+    clear: () =>
+        set({
+            transactions: [],
+            weekGroups: [],
+            summary: { income: 0, expense: 0 },
+            selectedMonth: new Date(),
+        }),
 }))
 
 export default useTransactionsStore

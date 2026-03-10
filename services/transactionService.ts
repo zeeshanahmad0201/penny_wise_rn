@@ -166,7 +166,16 @@ export const getAllTransactions = async (): Promise<Transaction[]> => {
             createdAt: new Date(row.created_at),
         }))
     } catch (error: any) {
-        console.log('Failed to fetch transactions: ', error)
+        console.error('Failed to fetch transactions: ', error)
         throw new Error('Unable to fetch all transactions at this moment! Please try again.')
+    }
+}
+
+export const deleteAll = async () => {
+    try {
+        await db.runAsync(`DELETE FROM ${TABLE_TRANSACTIONS}`)
+    } catch (error) {
+        console.error('Failed to delete data: ', error)
+        throw new Error('Unable to delete the transactions at this moment! Please try again.')
     }
 }
