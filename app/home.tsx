@@ -30,7 +30,12 @@ import useTransactions from '@hooks/useTransactions'
 
 // models
 import { Transaction } from '@models/Transaction'
+
+// context
 import { Theme, useTheme } from '@context/ThemeContext'
+
+// utils
+import { formatAmount } from '@utils/formatUtils'
 
 const Home = () => {
     const bottomSheetRef = useRef<BottomSheet>(null)
@@ -41,7 +46,7 @@ const Home = () => {
     const { summary, selectedMonth, setSelectedMonth, weekGroups } = useTransactions()
     const { theme } = useTheme()
 
-    const balance = (summary.income - summary.expense).toFixed(2)
+    const balance = summary.income - summary.expense
     const now = new Date()
     const thisMonth =
         selectedMonth.getFullYear() === now.getFullYear() &&
@@ -92,7 +97,7 @@ const Home = () => {
                     <Text style={Styles.balanceTitle}>Total Balance</Text>
                     <Spacer height={20} />
                     <Text style={Styles.balance} numberOfLines={1} adjustsFontSizeToFit>
-                        Rs{balance}
+                        Rs{formatAmount(balance)}
                     </Text>
                     <Spacer height={15} />
                     <ThemedView row>

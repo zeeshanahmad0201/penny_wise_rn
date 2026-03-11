@@ -14,6 +14,9 @@ import { Border } from '@constants/Border'
 // context
 import { Theme, useTheme } from '@context/ThemeContext'
 
+// utils
+import { formatAmount } from '@utils/formatUtils'
+
 const MetricCard = ({
     title,
     amount = 0,
@@ -40,7 +43,7 @@ const MetricCard = ({
                 <Text style={Styles.title}>{title}</Text>
             </ThemedView>
             <Spacer height={5} />
-            <Text style={Styles.amount}>Rs{amount ?? '0.00'}</Text>
+            <Text style={Styles.amount}>Rs{formatAmount(amount) ?? '0.00'}</Text>
         </ThemedView>
     )
 }

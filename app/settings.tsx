@@ -16,6 +16,8 @@ import { useTheme } from '@context/ThemeContext'
 import { exportToCSV } from '@utils/exportUtils'
 import Spacer from '@components/base/Spacer'
 
+import { seedDummyData } from '@services/seedService'
+
 const Settings = () => {
     const { getAllTransactions, resetAll } = useTransactions()
     const { isDarkMode, switchTheme, theme } = useTheme()
@@ -53,6 +55,15 @@ const Settings = () => {
         }
     }
 
+    const handleSeed = async () => {
+        try {
+            await seedDummyData()
+            Toast.show({ type: 'success', text1: 'Sample data loaded', position: 'bottom' })
+        } catch (error: any) {
+            Toast.show({ type: 'error', text1: error.message, position: 'bottom' })
+        }
+    }
+
     return (
         <ThemedView main>
             {/* PREFERENCES */}
@@ -83,6 +94,14 @@ const Settings = () => {
                         title={'Export Transactions'}
                         subtitle={'Download as CSV file'}
                         onPress={handleExport}
+                    />,
+                    <SettingTile
+                        key={'seed'}
+                        prefixIcon={'flask-outline'}
+                        prefixColor={theme.primary}
+                        title={'Load Sample Data'}
+                        subtitle={'Populate with 6 months of transactions'}
+                        onPress={handleSeed}
                     />,
                     <SettingTile
                         key={'clear'}
