@@ -126,7 +126,7 @@ eas build -p android --profile preview
 
 The build produces a shareable APK link on [expo.dev](https://expo.dev).
 
-> **Try it:** [Download APK](https://expo.dev/accounts/xeeshan_ahmad/projects/pennywise/builds/061ddbb4-8e28-4d7a-8223-93d0072a06ce)
+> **Try it:** [Download APK](https://github.com/zeeshanahmad0201/penny_wise_rn/releases/tag/v1.0.0)
 
 <br/>
 
