@@ -9,6 +9,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#F9FAFB"
     },
     "ios": {
@@ -33,6 +35,12 @@
       "@react-native-community/datetimepicker",
       "expo-sqlite",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "87da3e98-c659-416e-99c7-30436223d8ad"
+      }
+    }
   }
 }
