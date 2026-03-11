@@ -17,7 +17,7 @@ export const getBool = (key: string): boolean => {
 export const setData = (key: string, value: boolean | string | number | ArrayBuffer) => {
     try {
         storage.set(key, value)
-    } catch (error: any) {
+    } catch (error) {
         console.error('Failed to set data: ', error)
         throw new Error('Unable to set data')
     }

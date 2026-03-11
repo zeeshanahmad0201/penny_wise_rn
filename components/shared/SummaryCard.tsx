@@ -11,7 +11,7 @@ import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type SummaryCardProps = {
     title: string
@@ -21,7 +21,7 @@ type SummaryCardProps = {
 }
 
 const SummaryCard = ({ isIncome = false, title, amount, subtitle }: SummaryCardProps) => {
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (
@@ -37,7 +37,10 @@ const SummaryCard = ({ isIncome = false, title, amount, subtitle }: SummaryCardP
 
             {/* Amount */}
             <Spacer height={5} />
-            <Text style={Styles.amount}>Rs{amount}</Text>
+            <Text style={Styles.amount}>
+                {currency.symbol}
+                {amount}
+            </Text>
 
             {/* Subtitle */}
             <Spacer height={5} />

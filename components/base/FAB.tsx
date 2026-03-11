@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons'
 
 // constants
 import Spacing from '@constants/Spacing'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 import { useMemo } from 'react'
 
 type FABViewProps = {
@@ -13,7 +13,7 @@ type FABViewProps = {
 }
 
 const FAB = ({ icon, size = Spacing.iconLg, onPress: onPress }: FABViewProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
     return (
         <TouchableOpacity style={Styles.fab} onPress={onPress}>
@@ -28,8 +28,8 @@ const createStyles = (theme: Theme) =>
     StyleSheet.create({
         fab: {
             position: 'absolute',
-            bottom: Spacing.pageHorizontalSpacing,
-            right: Spacing.pageHorizontalSpacing,
+            bottom: Spacing.fabSpacing,
+            right: Spacing.fabSpacing,
             width: 56,
             height: 56,
             borderRadius: Spacing.radiusSm,

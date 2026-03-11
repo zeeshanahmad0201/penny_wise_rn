@@ -14,7 +14,7 @@ import Spacing from '@constants/Spacing'
 import { withOpacity } from '@utils/colorUtils'
 import Spacer from '@components/base/Spacer'
 import { Typography } from '@constants/Typography'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 import { useMemo } from 'react'
 
 // calculate the item width for responsiveness
@@ -27,7 +27,7 @@ const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * (COLUMNS - 1)) / C
 export type CategoryItemProps = { category: Category; selected?: boolean; onPress: () => void }
 
 const CategoryItem = ({ category, selected = false, onPress }: CategoryItemProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

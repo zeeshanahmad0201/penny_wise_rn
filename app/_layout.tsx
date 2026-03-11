@@ -9,15 +9,16 @@ import {
 } from '@expo-google-fonts/poppins'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast from 'react-native-toast-message'
+import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 // services
 import { initDatabase } from '@services/database'
 
 // context
-import { ThemeProvider, useTheme } from '@context/ThemeContext'
+import { PrefsProvider, useAppPrefs } from '@context/PrefsContext'
 
 const AppNavigator = () => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
 
     return (
         <>
@@ -59,9 +60,11 @@ const RootLayout = () => {
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <ThemeProvider>
-                <AppNavigator />
-            </ThemeProvider>
+            <ActionSheetProvider>
+                <PrefsProvider>
+                    <AppNavigator />
+                </PrefsProvider>
+            </ActionSheetProvider>
         </GestureHandlerRootView>
     )
 }

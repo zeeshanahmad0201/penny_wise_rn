@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react'
 import { PrefsKey } from '@constants/PrefsKeys'
 
 const usePrefs = () => {
-    const { isDarkMode, setDarkMode } = usePrefsStore()
+    const { isDarkMode, currency, setDarkMode, switchCurrency } = usePrefsStore()
 
     const changeTheme = useCallback(
         (isDark: boolean) => {
@@ -26,8 +26,10 @@ const usePrefs = () => {
 
     return {
         isDarkMode,
+        currency,
 
         switchTheme,
+        switchCurrency,
     }
 }
 

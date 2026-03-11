@@ -23,7 +23,7 @@ import { Typography } from '@constants/Typography'
 import { DateFormat } from '@constants/DateFormat'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 export type NumPadContainerProps = {
     isVisible: boolean
@@ -61,7 +61,7 @@ const NumPadContainer = ({
     const translateY = useSharedValue(300)
     const isValidAmount = !!amount && amount !== '0'
 
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     useEffect(() => {
@@ -89,7 +89,9 @@ const NumPadContainer = ({
             const dotIndex = newAmount.indexOf('.')
             if (dotIndex !== -1 && newAmount.length - dotIndex > 3) return prev
 
-            return newAmount.startsWith('0') ? newAmount.substring(1) : newAmount
+            return newAmount.startsWith('0') && !newAmount.startsWith('0.')
+                ? newAmount.substring(1)
+                : newAmount
         })
     }
 
@@ -98,7 +100,7 @@ const NumPadContainer = ({
         if (!newAmount || newAmount === '0') {
             setAmount('0')
         } else {
-            setAmount(newAmount.startsWith('0') ? newAmount.substring(1) : newAmount)
+            setAmount(newAmount.startsWith('0') && !newAmount.startsWith('0.') ? newAmount.substring(1) : newAmount)
         }
     }
 
@@ -127,7 +129,8 @@ const NumPadContainer = ({
                     <Text
                         style={[Styles.amount, { color: isIncome ? theme.success : theme.error }]}
                     >
-                        Rs{amount}
+                        {currency.symbol}
+                        {amount}
                     </Text>
                 </ThemedView>
 

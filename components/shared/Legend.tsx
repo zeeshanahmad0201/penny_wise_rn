@@ -10,14 +10,14 @@ import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type LegendProps = {
     title: string
     color: string
 }
 const Legend = ({ title, color }: LegendProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

@@ -4,7 +4,7 @@ import { Edges, SafeAreaView } from 'react-native-safe-area-context'
 
 import Spacing from '@constants/Spacing'
 
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type ThemedViewProps = ViewProps & {
     main?: boolean
@@ -21,7 +21,7 @@ const ThemedView = ({
     edges = ['bottom', 'left', 'right'],
     ...props
 }: ThemedViewProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const mergedStyle = [centeredContent && Styles.centeredContent, row && Styles.row, style]

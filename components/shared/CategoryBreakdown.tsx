@@ -22,11 +22,11 @@ import useAnalytics from '@hooks/useAnalytics'
 // utils
 import { getCategory } from '@utils/categoryUtils'
 import EmptyState from './EmptyState'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 const CategoryBreakdown = () => {
     const { transactions, selectedMonth, updateSelectedMonth } = useAnalytics()
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const total = transactions.reduce((sum, item) => sum + item.amount, 0)
@@ -36,15 +36,23 @@ const CategoryBreakdown = () => {
         updateSelectedMonth(newSelectedMonth)
     }
 
-    const categoryTotals = transactions.map((transaction) => ({
-        amount: transaction.amount,
-        category: getCategory(transaction.type, transaction.categoryIndex),
-    }))
+    const categoryTotals = useMemo(
+        () =>
+            transactions.map((transaction) => ({
+                amount: transaction.amount,
+                category: getCategory(transaction.type, transaction.categoryIndex),
+            })),
+        [transactions]
+    )
 
-    const pieData = categoryTotals.map((item) => ({
-        value: item.amount,
-        color: item.category.color,
-    }))
+    const pieData = useMemo(
+        () =>
+            categoryTotals.map((item) => ({
+                value: item.amount,
+                color: item.category.color,
+            })),
+        [categoryTotals]
+    )
 
     return (
         <ThemedView>
@@ -90,7 +98,8 @@ const CategoryBreakdown = () => {
                                                 numberOfLines={1}
                                                 adjustsFontSizeToFit
                                             >
-                                                Rs{total}
+                                                {currency.symbol}
+                                                {total}
                                             </Text>
                                         </ThemedView>
                                     )

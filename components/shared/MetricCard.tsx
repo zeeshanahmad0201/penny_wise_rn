@@ -12,7 +12,7 @@ import { Typography } from '@constants/Typography'
 import { Border } from '@constants/Border'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 // utils
 import { formatAmount } from '@utils/formatUtils'
@@ -26,7 +26,7 @@ const MetricCard = ({
     amount?: number
     isIncome?: boolean
 }) => {
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (
@@ -43,7 +43,10 @@ const MetricCard = ({
                 <Text style={Styles.title}>{title}</Text>
             </ThemedView>
             <Spacer height={5} />
-            <Text style={Styles.amount}>Rs{formatAmount(amount) ?? '0.00'}</Text>
+            <Text style={Styles.amount}>
+                {currency.symbol}
+                {formatAmount(amount)}
+            </Text>
         </ThemedView>
     )
 }

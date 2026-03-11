@@ -21,6 +21,8 @@ const Spacing = {
     radiusMd: 24,
     radiusLg: 48,
     radiusFull: 9999,
+
+    fabSpacing: 20,
 }
 
 export default Spacing

@@ -32,7 +32,7 @@ import useTransactions from '@hooks/useTransactions'
 import { Transaction } from '@models/Transaction'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 // utils
 import { formatAmount } from '@utils/formatUtils'
@@ -44,7 +44,7 @@ const Home = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>()
 
     const { summary, selectedMonth, setSelectedMonth, weekGroups } = useTransactions()
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
 
     const balance = summary.income - summary.expense
     const now = new Date()
@@ -97,7 +97,8 @@ const Home = () => {
                     <Text style={Styles.balanceTitle}>Total Balance</Text>
                     <Spacer height={20} />
                     <Text style={Styles.balance} numberOfLines={1} adjustsFontSizeToFit>
-                        Rs{formatAmount(balance)}
+                        {currency.symbol}
+                        {formatAmount(balance)}
                     </Text>
                     <Spacer height={15} />
                     <ThemedView row>

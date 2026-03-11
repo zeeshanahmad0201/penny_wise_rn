@@ -14,7 +14,7 @@ import { format, subMonths } from 'date-fns'
 import { DateFormat } from '@constants/DateFormat'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type MonthSelectorProps = {
     onSelect: (monthYear: string) => void
@@ -22,7 +22,7 @@ type MonthSelectorProps = {
 }
 
 const MonthSelector = ({ onSelect, selectedMonthYear }: MonthSelectorProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const now = new Date()

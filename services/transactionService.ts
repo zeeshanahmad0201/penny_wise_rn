@@ -119,7 +119,7 @@ export const updateTransaction = async (transaction: Transaction) => {
             ]
         )
     } catch (error) {
-        console.error('failed to update transaction', error)
+        console.error('Failed to update transaction', error)
         throw new Error('Unable to update transaction. Please try again')
     }
 }
@@ -165,7 +165,7 @@ export const getAllTransactions = async (): Promise<Transaction[]> => {
             notes: row.note ?? undefined,
             createdAt: new Date(row.created_at),
         }))
-    } catch (error: any) {
+    } catch (error) {
         console.error('Failed to fetch transactions: ', error)
         throw new Error('Unable to fetch all transactions at this moment! Please try again.')
     }

@@ -9,10 +9,10 @@ import ThemedView from '@components/base/ThemedView'
 import AppIcon from '@assets/icon.png'
 
 // context
-import { useTheme } from '@context/ThemeContext'
+import { useAppPrefs } from '@context/PrefsContext'
 
 const Splash = () => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     useEffect(() => {
         setTimeout(() => {
             router.replace('./home')

@@ -15,7 +15,7 @@ import { Border } from '@constants/Border'
 import { Transaction, WeekGroup } from '@models/Transaction'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type WeekItemProps = {
     weekGroup: WeekGroup
@@ -23,7 +23,7 @@ type WeekItemProps = {
 }
 
 const WeekItem = ({ weekGroup, onTransactionPress }: WeekItemProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

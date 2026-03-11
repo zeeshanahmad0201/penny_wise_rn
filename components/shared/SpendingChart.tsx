@@ -19,11 +19,11 @@ import { DateFormat } from '@constants/DateFormat'
 import useAnalytics from '@hooks/useAnalytics'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 const SpendingChart = () => {
     const { last6MonthsSummary } = useAnalytics()
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

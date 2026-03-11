@@ -33,11 +33,8 @@ const useAnalytics = () => {
         setSelectedMonth(now)
 
         await loadTransactions(now)
-    }, [loadTransactions, setSelectedMonth])
-
-    useEffect(() => {
-        loadSummaries()
-    }, [loadSummaries])
+        await loadSummaries()
+    }, [loadTransactions, setSelectedMonth, loadSummaries])
 
     useEffect(() => {
         loadData()

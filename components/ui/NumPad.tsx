@@ -10,7 +10,7 @@ import { Typography } from '@constants/Typography'
 import { Ionicons } from '@expo/vector-icons'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type NumPadProps = {
     onNumberPress: (value: string) => void
@@ -25,7 +25,7 @@ const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * COLUMNS) / COLUMNS
 const ITEM_HEIGHT = 50
 
 const NumPad = ({ onNumberPress, onClear }: NumPadProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const actions: string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫']
@@ -42,7 +42,11 @@ const NumPad = ({ onNumberPress, onClear }: NumPadProps) => {
                         onPress={() => (isBackspace ? onClear() : onNumberPress(item))}
                     >
                         {isBackspace ? (
-                            <Ionicons name="backspace" size={Spacing.iconMd} color={theme.text.normal} />
+                            <Ionicons
+                                name="backspace"
+                                size={Spacing.iconMd}
+                                color={theme.text.normal}
+                            />
                         ) : (
                             <Text style={isSpecial ? Styles.labelSpecial : Styles.label}>
                                 {item}

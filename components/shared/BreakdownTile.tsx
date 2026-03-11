@@ -13,7 +13,7 @@ import { withOpacity } from '@utils/colorUtils'
 import { Category } from '@models/Category'
 import { Typography } from '@constants/Typography'
 
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type BreakdownTileProps = {
     category: Category
@@ -22,7 +22,7 @@ type BreakdownTileProps = {
 }
 
 const BreakdownTile = ({ category, amount, percentage }: BreakdownTileProps) => {
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (
@@ -37,7 +37,10 @@ const BreakdownTile = ({ category, amount, percentage }: BreakdownTileProps) => 
             <Text style={Styles.label}>{category.label}</Text>
 
             <ThemedView>
-                <Text style={Styles.amount}>Rs{amount}</Text>
+                <Text style={Styles.amount}>
+                    {currency.symbol}
+                    {amount}
+                </Text>
                 <Text style={Styles.percentage}>{percentage}%</Text>
             </ThemedView>
         </ThemedView>

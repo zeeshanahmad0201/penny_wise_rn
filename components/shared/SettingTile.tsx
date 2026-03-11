@@ -14,7 +14,7 @@ import { Typography } from '@constants/Typography'
 import { withOpacity } from '@utils/colorUtils'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type SettingTileProps = {
     prefixIcon: keyof typeof Ionicons.glyphMap
@@ -33,7 +33,7 @@ const SettingTile = ({
     suffixIcon = 'chevron-forward',
     onPress,
 }: SettingTileProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     prefixColor = prefixColor ?? theme.iconColor

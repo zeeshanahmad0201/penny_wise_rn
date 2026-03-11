@@ -11,7 +11,7 @@ import { Typography } from '@constants/Typography'
 import { Elevation } from '@constants/Elevation'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 export type SegmentedOption = {
     key: string
@@ -26,7 +26,7 @@ export type SegmentedControlProps = {
 }
 
 const SegmentedControl = ({ options, selected, onSelect }: SegmentedControlProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const pillX = useSharedValue(0)

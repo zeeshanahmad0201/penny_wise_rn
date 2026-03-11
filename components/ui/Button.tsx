@@ -6,7 +6,7 @@ import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type ButtonProps = TouchableOpacityProps & {
     title: string
@@ -15,7 +15,7 @@ type ButtonProps = TouchableOpacityProps & {
 }
 
 const Button = ({ title, disabled = false, onPress, ...props }: ButtonProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const isDisabled = disabled || onPress === undefined

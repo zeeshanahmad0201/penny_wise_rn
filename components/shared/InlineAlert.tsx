@@ -11,7 +11,7 @@ import { useEffect, useMemo } from 'react'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type InlineAlertProps = {
     message: string
@@ -28,7 +28,7 @@ const InlineAlert = ({ message, type }: InlineAlertProps) => {
         height.value = withSpring(show ? 50 : 0)
     }, [show, opacity, height])
 
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const animatedStyle = useAnimatedStyle(() => ({

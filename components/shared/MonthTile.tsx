@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 // constants
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type MonthTileProps = {
     title: string
@@ -13,7 +13,7 @@ type MonthTileProps = {
 }
 
 const MonthTile = ({ title, isActive = false, onPress }: MonthTileProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

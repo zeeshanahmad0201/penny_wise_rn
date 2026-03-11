@@ -6,7 +6,7 @@ import ThemedView from '@components/base/ThemedView'
 import { Typography } from '@constants/Typography'
 import Spacing from '@constants/Spacing'
 import Spacer from '@components/base/Spacer'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 import { useMemo } from 'react'
 
 type EmptyStateProps = {
@@ -16,7 +16,7 @@ type EmptyStateProps = {
 }
 
 const EmptyState = ({ icon, title, message }: EmptyStateProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

@@ -12,7 +12,7 @@ import { Elevation } from '@constants/Elevation'
 import Spacing from '@constants/Spacing'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type SettingSectionProps = {
     title: string
@@ -20,7 +20,7 @@ type SettingSectionProps = {
 }
 
 const SettingSection = ({ title, tiles }: SettingSectionProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (
@@ -31,7 +31,7 @@ const SettingSection = ({ title, tiles }: SettingSectionProps) => {
 
             <ThemedView style={Styles.section}>
                 {tiles.map((tile, index) => (
-                    <Fragment key={index}>
+                    <Fragment key={tile.key}>
                         {tile}
                         {index !== tiles.length - 1 && <ThemedView style={Styles.separator} />}
                     </Fragment>

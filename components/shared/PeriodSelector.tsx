@@ -7,7 +7,7 @@ import ThemedView from '@components/base/ThemedView'
 // constants
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 import { useMemo } from 'react'
 
 type PeriodSelectorProps = {
@@ -25,7 +25,7 @@ const PeriodSelector = ({
     hasPrevious = true,
     hasNext = true,
 }: PeriodSelectorProps) => {
-    const { theme } = useTheme()
+    const { theme } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (

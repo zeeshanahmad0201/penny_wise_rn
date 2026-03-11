@@ -42,7 +42,7 @@ const AddTransaction = ({ onClose, transaction }: AddTransactionProps) => {
         if (transaction) {
             const cats =
                 transaction.type === TransactionType.income ? categories.income : categories.expense
-            selectCategory(cats[transaction!.categoryIndex])
+            selectCategory(cats[transaction.categoryIndex])
             const trOption =
                 transaction.type === TransactionType.income
                     ? transactionTypes[0]
@@ -80,7 +80,7 @@ const AddTransaction = ({ onClose, transaction }: AddTransactionProps) => {
             }
 
             onClose()
-        } catch (error: any) {
+        } catch (error) {
             setError(error instanceof Error ? error.message : 'Something went wrong!')
         } finally {
             setLoading(false)
@@ -94,8 +94,8 @@ const AddTransaction = ({ onClose, transaction }: AddTransactionProps) => {
             setLoading(true)
             await deleteTransaction(transaction.id)
             onClose()
-        } catch (error: any) {
-            setError(error.message)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : 'Something went wrong')
         } finally {
             setLoading(false)
         }

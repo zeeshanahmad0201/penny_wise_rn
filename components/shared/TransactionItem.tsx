@@ -22,7 +22,7 @@ import { categories } from '@data/categories'
 import { withOpacity } from '@utils/colorUtils'
 
 // context
-import { Theme, useTheme } from '@context/ThemeContext'
+import { Theme, useAppPrefs } from '@context/PrefsContext'
 
 type TransactionItemProps = {
     transaction: Transaction
@@ -34,7 +34,7 @@ const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
     const typeMeta = isIncome ? categories.income : categories.expense
     const category = typeMeta.at(transaction.categoryIndex)
 
-    const { theme } = useTheme()
+    const { theme, currency } = useAppPrefs()
     const Styles = useMemo(() => createStyles(theme), [theme])
 
     const defaultColor = theme.text.normal
@@ -53,7 +53,7 @@ const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
                 >
                     <Ionicons
                         size={Spacing.iconMd}
-                        name={category?.icon ?? 'accessibility-sharp'}
+                        name={category?.icon ?? 'help-circle-outline'}
                         color={category?.color ?? defaultColor}
                     />
                 </ThemedView>
@@ -79,7 +79,8 @@ const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
                         numberOfLines={1}
                         adjustsFontSizeToFit
                     >
-                        Rs{transaction.amount.toFixed(2)}
+                        {currency.symbol}
+                        {transaction.amount.toFixed(2)}
                     </Text>
 
                     <Spacer height={3} />
