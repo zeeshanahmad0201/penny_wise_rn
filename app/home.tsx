@@ -1,6 +1,6 @@
 import { Image, Text, StyleSheet } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { addMonths, format, subMonths } from 'date-fns'
 import { FlatList } from 'react-native-gesture-handler'
 import { router } from 'expo-router'
@@ -16,7 +16,6 @@ import AddTransaction from '@components/shared/AddTransaction'
 import EmptyState from '@components/shared/EmptyState'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 import BottomSheet from '@gorhom/bottom-sheet'
@@ -31,6 +30,7 @@ import useTransactions from '@hooks/useTransactions'
 
 // models
 import { Transaction } from '@models/Transaction'
+import { Theme, useTheme } from '@context/ThemeContext'
 
 const Home = () => {
     const bottomSheetRef = useRef<BottomSheet>(null)
@@ -39,6 +39,7 @@ const Home = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>()
 
     const { summary, selectedMonth, setSelectedMonth, weekGroups } = useTransactions()
+    const { theme } = useTheme()
 
     const balance = (summary.income - summary.expense).toFixed(2)
     const now = new Date()
@@ -46,8 +47,14 @@ const Home = () => {
         selectedMonth.getFullYear() === now.getFullYear() &&
         selectedMonth.getMonth() === now.getMonth()
 
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
-        <ThemedView main style={{ paddingHorizontal: 0 }} edges={['bottom', 'left', 'right', 'top']}>
+        <ThemedView
+            main
+            style={{ paddingHorizontal: 0 }}
+            edges={['bottom', 'left', 'right', 'top']}
+        >
             {/* AppBar */}
             <ThemedView row style={Styles.appBar}>
                 <ThemedView style={Styles.appBarLogo}>
@@ -63,7 +70,7 @@ const Home = () => {
                 <Ionicons
                     name="settings"
                     size={Spacing.iconMd}
-                    color={Colors.iconColor}
+                    color={theme.iconColor}
                     onPress={() => router.push('/settings')}
                 />
 
@@ -73,7 +80,7 @@ const Home = () => {
                 <Ionicons
                     name="stats-chart-outline"
                     size={Spacing.iconMd}
-                    color={Colors.iconColor}
+                    color={theme.iconColor}
                     onPress={() => router.push('/analytics')}
                 />
             </ThemedView>
@@ -169,48 +176,50 @@ const Home = () => {
 
 export default Home
 
-const Styles = StyleSheet.create({
-    appBar: {
-        paddingVertical: Spacing.pageVerticalSpacing,
-        paddingHorizontal: Spacing.pageHorizontalSpacing,
-        alignItems: 'center',
-    },
-    appBarLogo: {
-        borderRadius: Spacing.radiusSm,
-        backgroundColor: Colors.primary,
-        width: Spacing.iconLg,
-        height: Spacing.iconLg,
-    },
-    appBarTitle: {
-        ...Typography.titleMd,
-        flex: 1,
-    },
-    content: {
-        flex: 1,
-        marginHorizontal: Spacing.pageHorizontalSpacing,
-    },
-    balanceCard: {
-        backgroundColor: Colors.primary,
-        padding: Spacing.pageHorizontalSpacing,
-        borderRadius: Spacing.radiusMd,
-        alignItems: 'center',
-        shadowColor: Colors.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.35,
-        shadowRadius: 12,
-    },
-    balanceTitle: {
-        ...Typography.bodyMd,
-        color: Colors.onPrimary,
-    },
-    balance: {
-        ...Typography.displayLg,
-        color: Colors.onPrimary,
-    },
-    list: {
-        flex: 1,
-    },
-    listContent: {
-        flexGrow: 1, // alows ListEmptyComponent to fill available height
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        appBar: {
+            paddingVertical: Spacing.pageVerticalSpacing,
+            paddingHorizontal: Spacing.pageHorizontalSpacing,
+            alignItems: 'center',
+        },
+        appBarLogo: {
+            borderRadius: Spacing.radiusSm,
+            backgroundColor: theme.primary,
+            width: Spacing.iconLg,
+            height: Spacing.iconLg,
+        },
+        appBarTitle: {
+            ...Typography.titleMd,
+            flex: 1,
+            color: theme.text.normal,
+        },
+        content: {
+            flex: 1,
+            marginHorizontal: Spacing.pageHorizontalSpacing,
+        },
+        balanceCard: {
+            backgroundColor: theme.primary,
+            padding: Spacing.pageHorizontalSpacing,
+            borderRadius: Spacing.radiusMd,
+            alignItems: 'center',
+            shadowColor: theme.primary,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.35,
+            shadowRadius: 12,
+        },
+        balanceTitle: {
+            ...Typography.bodyMd,
+            color: theme.onPrimary,
+        },
+        balance: {
+            ...Typography.displayLg,
+            color: theme.onPrimary,
+        },
+        list: {
+            flex: 1,
+        },
+        listContent: {
+            flexGrow: 1, // alows ListEmptyComponent to fill available height
+        },
+    })

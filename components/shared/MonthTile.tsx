@@ -1,9 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { useMemo } from 'react'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type MonthTileProps = {
     title: string
@@ -12,19 +13,19 @@ type MonthTileProps = {
 }
 
 const MonthTile = ({ title, isActive = false, onPress }: MonthTileProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <TouchableOpacity
             style={[
                 Styles.container,
-                { backgroundColor: isActive ? Colors.success : Colors.background },
+                { backgroundColor: isActive ? theme.success : theme.background },
             ]}
             onPress={onPress}
         >
             <Text
-                style={[
-                    Styles.title,
-                    { color: isActive ? Colors.white.normal : Colors.text.normal },
-                ]}
+                style={[Styles.title, { color: isActive ? theme.onPrimary : theme.text.normal }]}
                 numberOfLines={1}
             >
                 {title}
@@ -35,15 +36,16 @@ const MonthTile = ({ title, isActive = false, onPress }: MonthTileProps) => {
 
 export default MonthTile
 
-const Styles = StyleSheet.create({
-    container: {
-        height: 35,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-    },
-    title: {
-        ...Typography.bodyMd,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            height: 35,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+        },
+        title: {
+            ...Typography.bodyMd,
+        },
+    })

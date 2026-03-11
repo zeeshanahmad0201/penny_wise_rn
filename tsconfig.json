@@ -14,7 +14,8 @@
             "@utils/*": ["utils/*"],
             "@services/*": ["services/*"],
             "@stores/*": ["stores/*"],
-            "@hooks/*": ["hooks/*"]
+            "@hooks/*": ["hooks/*"],
+            "@context/*": ["context/*"]
         }
     },
     "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"]

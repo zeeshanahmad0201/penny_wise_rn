@@ -1,4 +1,5 @@
 import { StyleSheet, Text } from 'react-native'
+import { useMemo } from 'react'
 
 // components
 import TransactionItem from '@components/shared/TransactionItem'
@@ -6,13 +7,15 @@ import ThemedView from '@components/base/ThemedView'
 import Spacer from '@components/base/Spacer'
 
 // constants
-import { Colors } from '@constants/Colors'
 import { Typography } from '@constants/Typography'
 import Spacing from '@constants/Spacing'
+import { Border } from '@constants/Border'
 
 // models
 import { Transaction, WeekGroup } from '@models/Transaction'
-import { Border } from '@constants/Border'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type WeekItemProps = {
     weekGroup: WeekGroup
@@ -20,6 +23,9 @@ type WeekItemProps = {
 }
 
 const WeekItem = ({ weekGroup, onTransactionPress }: WeekItemProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView>
             {/* Week Range */}
@@ -51,21 +57,22 @@ const WeekItem = ({ weekGroup, onTransactionPress }: WeekItemProps) => {
 
 export default WeekItem
 
-const Styles = StyleSheet.create({
-    weekRange: {
-        ...Typography.labelSm,
-        color: Colors.text.subtle,
-    },
-    content: {
-        backgroundColor: Colors.white.normal,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        ...Border,
-    },
-    separator: {
-        marginVertical: 15,
-        height: 0.25,
-        width: '100%',
-        backgroundColor: Colors.text.subtle,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        weekRange: {
+            ...Typography.labelSm,
+            color: theme.text.subtle,
+        },
+        content: {
+            backgroundColor: theme.white.normal,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            ...Border,
+        },
+        separator: {
+            marginVertical: 15,
+            height: 0.25,
+            width: '100%',
+            backgroundColor: theme.text.subtle,
+        },
+    })

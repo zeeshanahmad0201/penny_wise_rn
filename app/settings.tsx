@@ -1,22 +1,24 @@
 import Toast from 'react-native-toast-message'
-import { Alert } from 'react-native'
+import { Alert, Switch } from 'react-native'
 
 // components
 import ThemedView from '@components/base/ThemedView'
 import SettingSection from '@components/shared/SettingSection'
 import SettingTile from '@components/shared/SettingTile'
 
-// constants
-import { Colors } from '@constants/Colors'
-
 // hooks
 import useTransactions from '@hooks/useTransactions'
 
+// context
+import { useTheme } from '@context/ThemeContext'
+
 // utils
 import { exportToCSV } from '@utils/exportUtils'
+import Spacer from '@components/base/Spacer'
 
 const Settings = () => {
     const { getAllTransactions, resetAll } = useTransactions()
+    const { isDarkMode, switchTheme, theme } = useTheme()
 
     const handleExport = async () => {
         try {
@@ -53,6 +55,25 @@ const Settings = () => {
 
     return (
         <ThemedView main>
+            {/* PREFERENCES */}
+            <SettingSection
+                title="PREFERENCES"
+                tiles={[
+                    <SettingTile
+                        key={'darkMode'}
+                        prefixIcon={'moon-outline'}
+                        prefixColor={theme.primary}
+                        title={'Dark Mode'}
+                        subtitle={'Switch to dark theme'}
+                        suffixIcon={<Switch value={isDarkMode} onValueChange={switchTheme} />}
+                        onPress={() => {}}
+                    />,
+                ]}
+            />
+
+            <Spacer />
+
+            {/* Data Section */}
             <SettingSection
                 title={'DATA'}
                 tiles={[
@@ -66,7 +87,7 @@ const Settings = () => {
                     <SettingTile
                         key={'clear'}
                         prefixIcon={'trash-outline'}
-                        prefixColor={Colors.error}
+                        prefixColor={theme.error}
                         title={'Clear All Data'}
                         subtitle={'Permanently delete all transactions'}
                         onPress={handleClearPress}

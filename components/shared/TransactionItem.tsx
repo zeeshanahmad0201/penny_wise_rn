@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { format } from 'date-fns'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -9,7 +10,6 @@ import Spacer from '@components/base/Spacer'
 // constants
 import { Typography } from '@constants/Typography'
 import Spacing from '@constants/Spacing'
-import { Colors } from '@constants/Colors'
 import { DateFormat } from '@constants/DateFormat'
 
 // models
@@ -21,6 +21,9 @@ import { categories } from '@data/categories'
 // utils
 import { withOpacity } from '@utils/colorUtils'
 
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
+
 type TransactionItemProps = {
     transaction: Transaction
     onPress: () => void
@@ -30,7 +33,11 @@ const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
     const isIncome = transaction.type === TransactionType.income
     const typeMeta = isIncome ? categories.income : categories.expense
     const category = typeMeta.at(transaction.categoryIndex)
-    const defaultColor = Colors.text.normal
+
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
+    const defaultColor = theme.text.normal
 
     return (
         <TouchableOpacity onPress={onPress}>
@@ -88,38 +95,40 @@ const TransactionItem = ({ transaction, onPress }: TransactionItemProps) => {
 
 export default TransactionItem
 
-const Styles = StyleSheet.create({
-    iconBg: {
-        borderRadius: Spacing.radiusSm,
-        width: Spacing.iconXLg,
-        height: Spacing.iconXLg,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    content: {
-        flex: 1,
-    },
-    title: {
-        ...Typography.bodyLg,
-    },
-    notes: {
-        ...Typography.bodySm,
-        color: Colors.text.muted,
-    },
-    amount: {
-        ...Typography.titleMd,
-    },
-    income: {
-        color: Colors.success,
-    },
-    expense: {
-        color: Colors.error,
-    },
-    suffix: {
-        alignItems: 'flex-end',
-    },
-    date: {
-        ...Typography.labelSm,
-        color: Colors.text.subtle,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        iconBg: {
+            borderRadius: Spacing.radiusSm,
+            width: Spacing.iconXLg,
+            height: Spacing.iconXLg,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        content: {
+            flex: 1,
+        },
+        title: {
+            ...Typography.bodyLg,
+            color: theme.text.normal,
+        },
+        notes: {
+            ...Typography.bodySm,
+            color: theme.text.muted,
+        },
+        amount: {
+            ...Typography.titleMd,
+        },
+        income: {
+            color: theme.success,
+        },
+        expense: {
+            color: theme.error,
+        },
+        suffix: {
+            alignItems: 'flex-end',
+        },
+        date: {
+            ...Typography.labelSm,
+            color: theme.text.subtle,
+        },
+    })

@@ -1,4 +1,5 @@
 import { StyleSheet, Text } from 'react-native'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -8,11 +9,17 @@ import Spacer from '@components/base/Spacer'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
+
 type LegendProps = {
     title: string
     color: string
 }
 const Legend = ({ title, color }: LegendProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView row>
             <ThemedView style={[Styles.prefix, { backgroundColor: color }]} />
@@ -24,13 +31,15 @@ const Legend = ({ title, color }: LegendProps) => {
 
 export default Legend
 
-const Styles = StyleSheet.create({
-    prefix: {
-        height: 12,
-        width: 12,
-        borderRadius: Spacing.radiusXsm,
-    },
-    title: {
-        ...Typography.bodySm,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        prefix: {
+            height: 12,
+            width: 12,
+            borderRadius: Spacing.radiusXsm,
+        },
+        title: {
+            ...Typography.bodySm,
+            color: theme.text.normal,
+        },
+    })

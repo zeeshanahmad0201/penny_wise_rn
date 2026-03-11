@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { ReactElement } from 'react'
+import { ReactElement, useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -9,10 +9,12 @@ import Spacer from '@components/base/Spacer'
 // constants
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
-import { Colors } from '@constants/Colors'
 
 // utils
 import { withOpacity } from '@utils/colorUtils'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type SettingTileProps = {
     prefixIcon: keyof typeof Ionicons.glyphMap
@@ -25,12 +27,17 @@ type SettingTileProps = {
 
 const SettingTile = ({
     prefixIcon,
-    prefixColor = Colors.iconColor,
+    prefixColor,
     title,
     subtitle,
     suffixIcon = 'chevron-forward',
     onPress,
 }: SettingTileProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
+    prefixColor = prefixColor ?? theme.iconColor
+
     return (
         <TouchableOpacity onPress={onPress} style={Styles.container}>
             <ThemedView row>
@@ -51,7 +58,7 @@ const SettingTile = ({
 
                 {/* Suffix Icon */}
                 {typeof suffixIcon === 'string' ? (
-                    <Ionicons name={suffixIcon} size={Spacing.iconXsm} color={Colors.text.muted} />
+                    <Ionicons name={suffixIcon} size={Spacing.iconXsm} color={theme.text.muted} />
                 ) : (
                     suffixIcon
                 )}
@@ -62,26 +69,28 @@ const SettingTile = ({
 
 export default SettingTile
 
-const Styles = StyleSheet.create({
-    container: {
-        paddingVertical: Spacing.spacingMd,
-        paddingHorizontal: Spacing.spacingMd,
-    },
-    iconBg: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: Spacing.radiusSm,
-        width: 40,
-        height: 40,
-    },
-    titleContainer: {
-        flex: 1,
-    },
-    title: {
-        ...Typography.titleMd,
-    },
-    subtitle: {
-        ...Typography.bodySm,
-        color: Colors.text.muted,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            paddingVertical: Spacing.spacingMd,
+            paddingHorizontal: Spacing.spacingMd,
+        },
+        iconBg: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: Spacing.radiusSm,
+            width: 40,
+            height: 40,
+        },
+        titleContainer: {
+            flex: 1,
+        },
+        title: {
+            ...Typography.titleMd,
+            color: theme.text.normal,
+        },
+        subtitle: {
+            ...Typography.bodySm,
+            color: theme.text.muted,
+        },
+    })

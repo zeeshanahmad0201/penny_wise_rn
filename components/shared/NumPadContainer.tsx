@@ -1,5 +1,5 @@
 import { TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { format } from 'date-fns'
@@ -18,10 +18,12 @@ import Spacer from '@components/base/Spacer'
 import InlineAlert from '@components/shared/InlineAlert'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 import { DateFormat } from '@constants/DateFormat'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 export type NumPadContainerProps = {
     isVisible: boolean
@@ -58,6 +60,9 @@ const NumPadContainer = ({
 
     const translateY = useSharedValue(300)
     const isValidAmount = !!amount && amount !== '0'
+
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
 
     useEffect(() => {
         translateY.value = isVisible ? withSpring(0) : withTiming(1000)
@@ -120,7 +125,7 @@ const NumPadContainer = ({
                 {/* Amount Display */}
                 <ThemedView style={Styles.amountContainer}>
                     <Text
-                        style={[Styles.amount, { color: isIncome ? Colors.success : Colors.error }]}
+                        style={[Styles.amount, { color: isIncome ? theme.success : theme.error }]}
                     >
                         Rs{amount}
                     </Text>
@@ -154,7 +159,7 @@ const NumPadContainer = ({
                         <ThemedView row>
                             <Ionicons
                                 name="calendar"
-                                color={Colors.iconColor}
+                                color={theme.iconColor}
                                 size={Spacing.iconSm}
                             />
                             <Spacer height="100%" width={10} />
@@ -178,7 +183,7 @@ const NumPadContainer = ({
                         style={[
                             Styles.button,
                             isValidAmount && {
-                                backgroundColor: isIncome ? Colors.success : Colors.error,
+                                backgroundColor: isIncome ? theme.success : theme.error,
                             },
                         ]}
                         disabled={!isValidAmount || isLoading}
@@ -190,7 +195,7 @@ const NumPadContainer = ({
                             <Ionicons
                                 name="trash-outline"
                                 size={Spacing.iconMd}
-                                color={Colors.white.normal}
+                                color={theme.white.normal}
                                 style={Styles.delete}
                             />
                         </TouchableOpacity>
@@ -205,57 +210,60 @@ const NumPadContainer = ({
 
 export default NumPadContainer
 
-const Styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.white.normal,
-        borderTopLeftRadius: Spacing.radiusSm,
-        borderTopRightRadius: Spacing.radiusSm,
-        shadowColor: Colors.text.muted,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        paddingVertical: Spacing.spacingMd,
-    },
-    amountContainer: {
-        backgroundColor: Colors.background,
-        marginHorizontal: Spacing.pageHorizontalSpacing,
-        borderRadius: Spacing.radiusSm,
-        padding: Spacing.spacingMd,
-    },
-    amount: {
-        ...Typography.headlineLg,
-        textAlign: 'center',
-    },
-    input: {
-        ...Typography.labelMd,
-        flex: 1,
-        backgroundColor: Colors.background,
-        paddingHorizontal: Spacing.spacingMd,
-        paddingVertical: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        marginLeft: Spacing.pageHorizontalSpacing,
-        marginRight: Spacing.spacingSm,
-    },
-    datePicker: {
-        paddingHorizontal: Spacing.spacingMd,
-        paddingVertical: Spacing.spacingMd,
-        backgroundColor: Colors.background,
-        marginRight: Spacing.pageHorizontalSpacing,
-        borderRadius: Spacing.radiusSm,
-    },
-    datePickerText: {
-        ...Typography.labelMd,
-    },
-    buttonContainer: {
-        marginHorizontal: Spacing.pageHorizontalSpacing,
-    },
-    button: {
-        flex: 1,
-        marginRight: Spacing.spacingSm,
-    },
-    delete: {
-        backgroundColor: Colors.error,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.white.normal,
+            borderTopLeftRadius: Spacing.radiusSm,
+            borderTopRightRadius: Spacing.radiusSm,
+            shadowColor: theme.text.muted,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15,
+            shadowRadius: 8,
+            paddingVertical: Spacing.spacingMd,
+        },
+        amountContainer: {
+            backgroundColor: theme.background,
+            marginHorizontal: Spacing.pageHorizontalSpacing,
+            borderRadius: Spacing.radiusSm,
+            padding: Spacing.spacingMd,
+        },
+        amount: {
+            ...Typography.headlineLg,
+            textAlign: 'center',
+        },
+        input: {
+            ...Typography.labelMd,
+            flex: 1,
+            backgroundColor: theme.background,
+            paddingHorizontal: Spacing.spacingMd,
+            paddingVertical: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            marginLeft: Spacing.pageHorizontalSpacing,
+            marginRight: Spacing.spacingSm,
+            color: theme.text.normal,
+        },
+        datePicker: {
+            paddingHorizontal: Spacing.spacingMd,
+            paddingVertical: Spacing.spacingMd,
+            backgroundColor: theme.background,
+            marginRight: Spacing.pageHorizontalSpacing,
+            borderRadius: Spacing.radiusSm,
+        },
+        datePickerText: {
+            ...Typography.labelMd,
+            color: theme.text.normal,
+        },
+        buttonContainer: {
+            marginHorizontal: Spacing.pageHorizontalSpacing,
+        },
+        button: {
+            flex: 1,
+            marginRight: Spacing.spacingSm,
+        },
+        delete: {
+            backgroundColor: theme.error,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+        },
+    })

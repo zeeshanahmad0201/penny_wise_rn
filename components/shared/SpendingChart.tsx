@@ -1,6 +1,7 @@
 import { StyleSheet, Text } from 'react-native'
 import { BarChart } from 'react-native-gifted-charts'
 import { format, parse } from 'date-fns'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -8,18 +9,22 @@ import Spacer from '@components/base/Spacer'
 import Legend from '@components/shared/Legend'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Elevation } from '@constants/Elevation'
 import { Border } from '@constants/Border'
 import { Typography } from '@constants/Typography'
+import { DateFormat } from '@constants/DateFormat'
 
 // hooks
 import useAnalytics from '@hooks/useAnalytics'
-import { DateFormat } from '@constants/DateFormat'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 const SpendingChart = () => {
     const { last6MonthsSummary } = useAnalytics()
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
 
     return (
         <ThemedView style={Styles.container}>
@@ -36,15 +41,16 @@ const SpendingChart = () => {
                 endSpacing={0}
                 yAxisLabelWidth={0}
                 isAnimated
+                xAxisLabelTextStyle={{ color: theme.text.normal }}
                 data={last6MonthsSummary.flatMap((item) => [
                     {
                         value: item.income,
                         label: format(parse(item.month, 'yyyy-MM', new Date()), DateFormat.month),
-                        frontColor: Colors.success,
+                        frontColor: theme.success,
                         spacing: 2,
                         labelWidth: 40,
                     },
-                    { value: item.expense, frontColor: Colors.error },
+                    { value: item.expense, frontColor: theme.error },
                 ])}
             />
 
@@ -55,9 +61,9 @@ const SpendingChart = () => {
             <Spacer height={10} />
 
             <ThemedView row centeredContent>
-                <Legend title="Income" color={Colors.success} />
+                <Legend title="Income" color={theme.success} />
                 <Spacer width={20} height={0} />
-                <Legend title="Expense" color={Colors.error} />
+                <Legend title="Expense" color={theme.error} />
             </ThemedView>
         </ThemedView>
     )
@@ -65,19 +71,21 @@ const SpendingChart = () => {
 
 export default SpendingChart
 
-const Styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.white.normal,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        ...Border,
-        ...Elevation.sm,
-    },
-    title: {
-        ...Typography.titleSm,
-    },
-    divider: {
-        backgroundColor: Border.borderColor,
-        height: 1,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.white.normal,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            ...Border,
+            ...Elevation.sm,
+        },
+        title: {
+            ...Typography.titleSm,
+            color: theme.text.normal,
+        },
+        divider: {
+            backgroundColor: Border.borderColor,
+            height: 1,
+        },
+    })

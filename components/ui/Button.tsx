@@ -1,9 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { useMemo } from 'react'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type ButtonProps = TouchableOpacityProps & {
     title: string
@@ -12,6 +15,9 @@ type ButtonProps = TouchableOpacityProps & {
 }
 
 const Button = ({ title, disabled = false, onPress, ...props }: ButtonProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     const isDisabled = disabled || onPress === undefined
 
     return (
@@ -28,23 +34,24 @@ const Button = ({ title, disabled = false, onPress, ...props }: ButtonProps) => 
 
 export default Button
 
-const Styles = StyleSheet.create({
-    container: {
-        height: 55,
-        backgroundColor: Colors.primary,
-        borderRadius: Spacing.radiusSm,
-        marginVertical: Spacing.spacingMd,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    containerDisabled: {
-        backgroundColor: Colors.text.subtle,
-    },
-    title: {
-        ...Typography.labelLg,
-        color: Colors.onPrimary,
-    },
-    titleDisabled: {
-        color: Colors.text.muted,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            height: 55,
+            backgroundColor: theme.primary,
+            borderRadius: Spacing.radiusSm,
+            marginVertical: Spacing.spacingMd,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        containerDisabled: {
+            backgroundColor: theme.text.subtle,
+        },
+        title: {
+            ...Typography.labelLg,
+            color: theme.onPrimary,
+        },
+        titleDisabled: {
+            color: theme.text.muted,
+        },
+    })

@@ -1,4 +1,5 @@
-import { StyleSheet, Dimensions, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -7,7 +8,9 @@ import ThemedView from '@components/base/ThemedView'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
 import { Ionicons } from '@expo/vector-icons'
-import { Colors } from '@constants/Colors'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type NumPadProps = {
     onNumberPress: (value: string) => void
@@ -22,6 +25,9 @@ const ITEM_WIDTH = (SCREEN_WIDTH - HORIZONTAL_PADDING - GAP * COLUMNS) / COLUMNS
 const ITEM_HEIGHT = 50
 
 const NumPad = ({ onNumberPress, onClear }: NumPadProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     const actions: string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫']
 
     return (
@@ -36,7 +42,7 @@ const NumPad = ({ onNumberPress, onClear }: NumPadProps) => {
                         onPress={() => (isBackspace ? onClear() : onNumberPress(item))}
                     >
                         {isBackspace ? (
-                            <Ionicons name="backspace" size={Spacing.iconMd} />
+                            <Ionicons name="backspace" size={Spacing.iconMd} color={theme.text.normal} />
                         ) : (
                             <Text style={isSpecial ? Styles.labelSpecial : Styles.label}>
                                 {item}
@@ -51,26 +57,29 @@ const NumPad = ({ onNumberPress, onClear }: NumPadProps) => {
 
 export default NumPad
 
-const Styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: GAP,
-        justifyContent: 'center',
-    },
-    button: {
-        backgroundColor: Colors.background,
-        width: ITEM_WIDTH,
-        height: ITEM_HEIGHT,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: Spacing.radiusSm,
-    },
-    label: {
-        ...Typography.headlineSm,
-    },
-    labelSpecial: {
-        ...Typography.headlineSm,
-        paddingBottom: 10,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: GAP,
+            justifyContent: 'center',
+        },
+        button: {
+            backgroundColor: theme.background,
+            width: ITEM_WIDTH,
+            height: ITEM_HEIGHT,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: Spacing.radiusSm,
+        },
+        label: {
+            ...Typography.headlineSm,
+            color: theme.text.normal,
+        },
+        labelSpecial: {
+            ...Typography.headlineSm,
+            color: theme.text.normal,
+            paddingBottom: 10,
+        },
+    })

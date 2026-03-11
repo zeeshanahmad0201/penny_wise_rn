@@ -13,6 +13,36 @@ import Toast from 'react-native-toast-message'
 // services
 import { initDatabase } from '@services/database'
 
+// context
+import { ThemeProvider, useTheme } from '@context/ThemeContext'
+
+const AppNavigator = () => {
+    const { theme } = useTheme()
+
+    return (
+        <>
+            <Stack
+                screenOptions={{
+                    headerStyle: { backgroundColor: theme.background },
+                    headerTintColor: theme.text.normal,
+                }}
+            >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="home" options={{ headerShown: false }} />
+                <Stack.Screen
+                    name="analytics"
+                    options={{ title: 'Analytics', headerBackButtonDisplayMode: 'minimal' }}
+                />
+                <Stack.Screen
+                    name="settings"
+                    options={{ title: 'Settings', headerBackButtonDisplayMode: 'minimal' }}
+                />
+            </Stack>
+            <Toast />
+        </>
+    )
+}
+
 const RootLayout = () => {
     useEffect(() => {
         initDatabase()
@@ -29,19 +59,9 @@ const RootLayout = () => {
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="home" options={{ headerShown: false }} />
-                <Stack.Screen
-                    name="analytics"
-                    options={{ title: 'Analytics', headerBackButtonDisplayMode: 'minimal' }}
-                />
-                <Stack.Screen
-                    name="settings"
-                    options={{ title: 'Settings', headerBackButtonDisplayMode: 'minimal' }}
-                />
-            </Stack>
-            <Toast />
+            <ThemeProvider>
+                <AppNavigator />
+            </ThemeProvider>
         </GestureHandlerRootView>
     )
 }

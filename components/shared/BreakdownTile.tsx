@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -11,7 +12,8 @@ import { withOpacity } from '@utils/colorUtils'
 // models
 import { Category } from '@models/Category'
 import { Typography } from '@constants/Typography'
-import { Colors } from '@constants/Colors'
+
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type BreakdownTileProps = {
     category: Category
@@ -20,6 +22,9 @@ type BreakdownTileProps = {
 }
 
 const BreakdownTile = ({ category, amount, percentage }: BreakdownTileProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView row style={Styles.container}>
             {/* Icon */}
@@ -41,27 +46,30 @@ const BreakdownTile = ({ category, amount, percentage }: BreakdownTileProps) => 
 
 export default BreakdownTile
 
-const Styles = StyleSheet.create({
-    container: {
-        marginHorizontal: Spacing.spacingSm,
-    },
-    iconBg: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: Spacing.radiusXsm,
-        width: 24,
-        height: 24,
-    },
-    label: {
-        ...Typography.bodySm,
-        flex: 1,
-        paddingLeft: 10,
-    },
-    amount: {
-        ...Typography.labelMd,
-    },
-    percentage: {
-        ...Typography.bodySm,
-        color: Colors.text.muted,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            marginHorizontal: Spacing.spacingSm,
+        },
+        iconBg: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: Spacing.radiusXsm,
+            width: 24,
+            height: 24,
+        },
+        label: {
+            ...Typography.bodySm,
+            flex: 1,
+            paddingLeft: 10,
+            color: theme.text.normal,
+        },
+        amount: {
+            ...Typography.labelMd,
+            color: theme.text.normal,
+        },
+        percentage: {
+            ...Typography.bodySm,
+            color: theme.text.muted,
+        },
+    })

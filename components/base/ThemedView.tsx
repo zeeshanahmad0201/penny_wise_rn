@@ -1,7 +1,10 @@
 import { ViewProps, StyleSheet, View } from 'react-native'
+import { useMemo } from 'react'
 import { Edges, SafeAreaView } from 'react-native-safe-area-context'
-import { Colors } from '@constants/Colors'
+
 import Spacing from '@constants/Spacing'
+
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type ThemedViewProps = ViewProps & {
     main?: boolean
@@ -18,6 +21,9 @@ const ThemedView = ({
     edges = ['bottom', 'left', 'right'],
     ...props
 }: ThemedViewProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     const mergedStyle = [centeredContent && Styles.centeredContent, row && Styles.row, style]
 
     if (main) {
@@ -29,20 +35,21 @@ const ThemedView = ({
 
 export default ThemedView
 
-const Styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        width: '100%',
-        paddingHorizontal: Spacing.pageHorizontalSpacing,
-        paddingVertical: Spacing.pageVerticalSpacing,
-        backgroundColor: Colors.background,
-    },
-    centeredContent: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        main: {
+            flex: 1,
+            width: '100%',
+            paddingHorizontal: Spacing.pageHorizontalSpacing,
+            paddingVertical: Spacing.pageVerticalSpacing,
+            backgroundColor: theme.background,
+        },
+        centeredContent: {
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        row: {
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+    })

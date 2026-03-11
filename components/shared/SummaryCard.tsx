@@ -1,14 +1,17 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StyleSheet, Text } from 'react-native'
+import { useMemo } from 'react'
 
 // components
 import Spacer from '@components/base/Spacer'
 import ThemedView from '@components/base/ThemedView'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type SummaryCardProps = {
     title: string
@@ -16,17 +19,18 @@ type SummaryCardProps = {
     subtitle: string
     isIncome?: boolean
 }
+
 const SummaryCard = ({ isIncome = false, title, amount, subtitle }: SummaryCardProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView
-            style={[
-                Styles.container,
-                { backgroundColor: isIncome ? Colors.success : Colors.error },
-            ]}
+            style={[Styles.container, { backgroundColor: isIncome ? theme.success : theme.error }]}
         >
             {/* Icon and title */}
             <ThemedView row>
-                <Ionicons name={isIncome ? 'arrow-up' : 'arrow-down'} color={Colors.white.normal} />
+                <Ionicons name={isIncome ? 'arrow-up' : 'arrow-down'} color={theme.onPrimary} />
                 <Spacer width={5} height={0} />
                 <Text style={Styles.title}>{title}</Text>
             </ThemedView>
@@ -44,24 +48,25 @@ const SummaryCard = ({ isIncome = false, title, amount, subtitle }: SummaryCardP
 
 export default SummaryCard
 
-const Styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        justifyContent: 'space-between',
-    },
-    title: {
-        ...Typography.bodySm,
-        flex: 1,
-        color: Colors.white.normal,
-    },
-    amount: {
-        ...Typography.headlineLg,
-        color: Colors.white.normal,
-    },
-    subtitle: {
-        ...Typography.labelSm,
-        color: Colors.white.normal,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            justifyContent: 'space-between',
+        },
+        title: {
+            ...Typography.bodySm,
+            flex: 1,
+            color: theme.onPrimary,
+        },
+        amount: {
+            ...Typography.headlineLg,
+            color: theme.onPrimary,
+        },
+        subtitle: {
+            ...Typography.labelSm,
+            color: theme.onPrimary,
+        },
+    })

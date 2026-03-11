@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet } from 'react-native'
+import { useMemo } from 'react'
 
 // components
 import Spacer from '@components/base/Spacer'
@@ -6,12 +7,14 @@ import ThemedView from '@components/base/ThemedView'
 import MonthTile from '@components/shared/MonthTile'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Elevation } from '@constants/Elevation'
 import { Border } from '@constants/Border'
 import { format, subMonths } from 'date-fns'
 import { DateFormat } from '@constants/DateFormat'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type MonthSelectorProps = {
     onSelect: (monthYear: string) => void
@@ -19,6 +22,9 @@ type MonthSelectorProps = {
 }
 
 const MonthSelector = ({ onSelect, selectedMonthYear }: MonthSelectorProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     const now = new Date()
     const months = Array.from({ length: 6 }, (_, index) =>
         format(subMonths(now, index), DateFormat.monthYear)
@@ -46,12 +52,13 @@ const MonthSelector = ({ onSelect, selectedMonthYear }: MonthSelectorProps) => {
 
 export default MonthSelector
 
-const Styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.white.normal,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        ...Border,
-        ...Elevation.sm,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.white.normal,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            ...Border,
+            ...Elevation.sm,
+        },
+    })

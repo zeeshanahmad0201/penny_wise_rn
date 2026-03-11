@@ -5,13 +5,14 @@ import { useEffect } from 'react'
 // themed components
 import ThemedView from '@components/base/ThemedView'
 
-// constants
-import { Colors } from '@constants/Colors'
-
 // assets
 import AppIcon from '@assets/icon.png'
 
+// context
+import { useTheme } from '@context/ThemeContext'
+
 const Splash = () => {
+    const { theme } = useTheme()
     useEffect(() => {
         setTimeout(() => {
             router.replace('./home')
@@ -23,7 +24,7 @@ const Splash = () => {
             <View
                 style={{
                     borderRadius: 24,
-                    backgroundColor: Colors.primary,
+                    backgroundColor: theme.primary,
                     width: 150,
                     height: 150,
                 }}

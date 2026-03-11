@@ -1,7 +1,7 @@
 import { Text, StyleSheet } from 'react-native'
 import { PieChart } from 'react-native-gifted-charts'
 import { format, parse } from 'date-fns'
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -11,7 +11,6 @@ import BreakdownTile from '@components/shared/BreakdownTile'
 
 // constants
 import { Typography } from '@constants/Typography'
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Border } from '@constants/Border'
 import { Elevation } from '@constants/Elevation'
@@ -23,9 +22,12 @@ import useAnalytics from '@hooks/useAnalytics'
 // utils
 import { getCategory } from '@utils/categoryUtils'
 import EmptyState from './EmptyState'
+import { Theme, useTheme } from '@context/ThemeContext'
 
 const CategoryBreakdown = () => {
     const { transactions, selectedMonth, updateSelectedMonth } = useAnalytics()
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
 
     const total = transactions.reduce((sum, item) => sum + item.amount, 0)
 
@@ -128,30 +130,32 @@ const CategoryBreakdown = () => {
 
 export default CategoryBreakdown
 
-const Styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.white.normal,
-        padding: Spacing.spacingMd,
-        borderRadius: Spacing.radiusSm,
-        ...Border,
-        ...Elevation.sm,
-    },
-    title: {
-        ...Typography.titleSm,
-        flex: 1,
-    },
-    subtitle: {
-        ...Typography.bodySm,
-        color: Colors.text.muted,
-    },
-    pieContainer: {
-        alignItems: 'center',
-    },
-    pieTitle: {
-        ...Typography.titleMd,
-    },
-    pieSubtitle: {
-        ...Typography.bodySm,
-        color: Colors.text.muted,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.white.normal,
+            padding: Spacing.spacingMd,
+            borderRadius: Spacing.radiusSm,
+            ...Border,
+            ...Elevation.sm,
+        },
+        title: {
+            ...Typography.titleSm,
+            flex: 1,
+            color: theme.text.normal,
+        },
+        subtitle: {
+            ...Typography.bodySm,
+            color: theme.text.muted,
+        },
+        pieContainer: {
+            alignItems: 'center',
+        },
+        pieTitle: {
+            ...Typography.titleMd,
+        },
+        pieSubtitle: {
+            ...Typography.bodySm,
+            color: theme.text.muted,
+        },
+    })

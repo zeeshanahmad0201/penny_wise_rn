@@ -5,12 +5,13 @@ import Animated, {
     withTiming,
     withSpring,
 } from 'react-native-reanimated'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 // constants
-import { Colors } from '@constants/Colors'
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+
+import { Theme, useTheme } from '@context/ThemeContext'
 
 type InlineAlertProps = {
     message: string
@@ -27,6 +28,9 @@ const InlineAlert = ({ message, type }: InlineAlertProps) => {
         height.value = withSpring(show ? 50 : 0)
     }, [show, opacity, height])
 
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     const animatedStyle = useAnimatedStyle(() => ({
         opacity: opacity.value,
         height: height.value,
@@ -34,8 +38,8 @@ const InlineAlert = ({ message, type }: InlineAlertProps) => {
     }))
 
     const bgColor = {
-        error: Colors.error,
-        success: Colors.success,
+        error: theme.error,
+        success: theme.success,
     }[type]
 
     return (
@@ -47,14 +51,15 @@ const InlineAlert = ({ message, type }: InlineAlertProps) => {
 
 export default InlineAlert
 
-const Styles = StyleSheet.create({
-    container: {
-        paddingVertical: Spacing.spacingMd,
-        paddingHorizontal: Spacing.spacingSm,
-        marginVertical: Spacing.spacingSm,
-    },
-    errorMsg: {
-        ...Typography.labelMd,
-        color: Colors.white.normal,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            paddingVertical: Spacing.spacingMd,
+            paddingHorizontal: Spacing.spacingSm,
+            marginVertical: Spacing.spacingSm,
+        },
+        errorMsg: {
+            ...Typography.labelMd,
+            color: theme.white.normal,
+        },
+    })

@@ -1,13 +1,16 @@
 import { useWindowDimensions, StyleSheet } from 'react-native'
-import { forwardRef, ReactNode } from 'react'
+import { forwardRef, ReactNode, useMemo } from 'react'
 import GorhomBottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
 
-// constants
-import { Colors } from '@constants/Colors'
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 const AppBottomSheet = forwardRef<GorhomBottomSheet, { children: ReactNode; onChange?: (index: number) => void }>(
     ({ children, onChange }, ref) => {
         const { height } = useWindowDimensions()
+        const { theme } = useTheme()
+        const Styles = useMemo(() => createStyles(theme), [theme])
+
         return (
             <GorhomBottomSheet
                 ref={ref}
@@ -29,8 +32,9 @@ AppBottomSheet.displayName = 'BottomSheet'
 
 export default AppBottomSheet
 
-const Styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.background,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            backgroundColor: theme.background,
+        },
+    })

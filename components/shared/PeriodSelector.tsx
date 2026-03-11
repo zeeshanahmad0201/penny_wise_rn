@@ -7,6 +7,8 @@ import ThemedView from '@components/base/ThemedView'
 // constants
 import Spacing from '@constants/Spacing'
 import { Typography } from '@constants/Typography'
+import { Theme, useTheme } from '@context/ThemeContext'
+import { useMemo } from 'react'
 
 type PeriodSelectorProps = {
     title: string
@@ -23,12 +25,19 @@ const PeriodSelector = ({
     hasPrevious = true,
     hasNext = true,
 }: PeriodSelectorProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView row>
             {/* Previous */}
             {hasPrevious && (
                 <TouchableOpacity onPress={onPrevious}>
-                    <Ionicons name="arrow-back-circle-outline" size={Spacing.iconLg} />
+                    <Ionicons
+                        name="arrow-back-circle-outline"
+                        size={Spacing.iconLg}
+                        color={theme.iconColor}
+                    />
                 </TouchableOpacity>
             )}
 
@@ -38,7 +47,11 @@ const PeriodSelector = ({
             {/* Next */}
             {hasNext && (
                 <TouchableOpacity onPress={onNext}>
-                    <Ionicons name="arrow-forward-circle-outline" size={Spacing.iconLg} />
+                    <Ionicons
+                        name="arrow-forward-circle-outline"
+                        size={Spacing.iconLg}
+                        color={theme.iconColor}
+                    />
                 </TouchableOpacity>
             )}
         </ThemedView>
@@ -47,10 +60,12 @@ const PeriodSelector = ({
 
 export default PeriodSelector
 
-const Styles = StyleSheet.create({
-    title: {
-        ...Typography.titleMd,
-        flex: 1,
-        textAlign: 'center',
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        title: {
+            ...Typography.titleMd,
+            flex: 1,
+            textAlign: 'center',
+            color: theme.text.normal,
+        },
+    })

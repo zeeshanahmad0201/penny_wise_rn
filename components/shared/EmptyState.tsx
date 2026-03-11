@@ -6,6 +6,8 @@ import ThemedView from '@components/base/ThemedView'
 import { Typography } from '@constants/Typography'
 import Spacing from '@constants/Spacing'
 import Spacer from '@components/base/Spacer'
+import { Theme, useTheme } from '@context/ThemeContext'
+import { useMemo } from 'react'
 
 type EmptyStateProps = {
     icon?: keyof typeof Ionicons.glyphMap
@@ -14,12 +16,15 @@ type EmptyStateProps = {
 }
 
 const EmptyState = ({ icon, title, message }: EmptyStateProps) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView centeredContent style={Styles.container}>
             {/* Icon */}
             {icon && (
                 <>
-                    <Ionicons name={icon} size={Spacing.iconLg} />
+                    <Ionicons name={icon} size={Spacing.iconLg} color={theme.text.normal} />
                     <Spacer height={10} />
                 </>
             )}
@@ -37,19 +42,23 @@ const EmptyState = ({ icon, title, message }: EmptyStateProps) => {
 
 export default EmptyState
 
-const Styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    title: {
-        ...Typography.titleMd,
-        textAlign: 'center',
-    },
-    message: {
-        ...Typography.bodyMd,
-        textAlign: 'center',
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: 20,
+            color: theme.text.normal,
+        },
+        title: {
+            ...Typography.titleMd,
+            textAlign: 'center',
+            color: theme.text.normal,
+        },
+        message: {
+            ...Typography.bodyMd,
+            textAlign: 'center',
+            color: theme.text.normal,
+        },
+    })

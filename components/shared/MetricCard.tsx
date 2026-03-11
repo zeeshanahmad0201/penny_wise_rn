@@ -1,5 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { useMemo } from 'react'
 
 // components
 import ThemedView from '@components/base/ThemedView'
@@ -7,9 +8,11 @@ import Spacer from '@components/base/Spacer'
 
 // constants
 import Spacing from '@constants/Spacing'
-import { Colors } from '@constants/Colors'
 import { Typography } from '@constants/Typography'
 import { Border } from '@constants/Border'
+
+// context
+import { Theme, useTheme } from '@context/ThemeContext'
 
 const MetricCard = ({
     title,
@@ -20,6 +23,9 @@ const MetricCard = ({
     amount?: number
     isIncome?: boolean
 }) => {
+    const { theme } = useTheme()
+    const Styles = useMemo(() => createStyles(theme), [theme])
+
     return (
         <ThemedView style={Styles.container}>
             <ThemedView row style={Styles.header}>
@@ -41,32 +47,33 @@ const MetricCard = ({
 
 export default MetricCard
 
-const Styles = StyleSheet.create({
-    container: {
-        borderColor: Colors.white.normal,
-        borderWidth: Border.width,
-        flex: 1,
-        padding: Spacing.spacingMd,
-        backgroundColor: Colors.white.subtle,
-        borderRadius: Spacing.radiusSm,
-    },
-    header: {
-        alignItems: 'center',
-    },
-    iconBg: {
-        backgroundColor: Colors.white.muted,
-        padding: Spacing.spacingSm,
-        borderRadius: Spacing.radiusFull,
-    },
-    icon: {
-        color: Colors.onPrimary,
-    },
-    title: {
-        ...Typography.labelMd,
-        color: Colors.onPrimary,
-    },
-    amount: {
-        ...Typography.titleLg,
-        color: Colors.onPrimary,
-    },
-})
+const createStyles = (theme: Theme) =>
+    StyleSheet.create({
+        container: {
+            borderColor: theme.white.normal,
+            borderWidth: Border.borderWidth,
+            flex: 1,
+            padding: Spacing.spacingMd,
+            backgroundColor: theme.white.subtle,
+            borderRadius: Spacing.radiusSm,
+        },
+        header: {
+            alignItems: 'center',
+        },
+        iconBg: {
+            backgroundColor: theme.white.muted,
+            padding: Spacing.spacingSm,
+            borderRadius: Spacing.radiusFull,
+        },
+        icon: {
+            color: theme.onPrimary,
+        },
+        title: {
+            ...Typography.labelMd,
+            color: theme.onPrimary,
+        },
+        amount: {
+            ...Typography.titleLg,
+            color: theme.onPrimary,
+        },
+    })
