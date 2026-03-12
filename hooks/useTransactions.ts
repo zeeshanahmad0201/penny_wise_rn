@@ -1,8 +1,7 @@
 import { useEffect, useCallback } from 'react'
-import { endOfWeek, format, isSameWeek, startOfWeek } from 'date-fns'
 
 // models
-import { NewTransaction, Transaction, WeekGroup } from '@models/Transaction'
+import { NewTransaction, Transaction } from '@models/Transaction'
 
 // services
 import {
@@ -20,6 +19,7 @@ import useTransactionsStore from '@stores/transactionStore'
 
 // constants
 import { DateFormat } from '@constants/DateFormat'
+import { buildWeekGroups } from '@utils/transactionUtils'
 
 const useTransactions = () => {
     const {
@@ -34,35 +34,6 @@ const useTransactions = () => {
         clear,
     } = useTransactionsStore()
 
-    const buildWeekGroups = useCallback((rows: Transaction[]): WeekGroup[] => {
-        if (rows.length === 0) return []
-
-        const groups: WeekGroup[] = []
-
-        for (const transaction of rows) {
-            const lastGroup = groups[groups.length - 1]
-
-            // rows are sorted DESC, so consecutive same-week transactions are adjacent
-            // compare against first transaction in last group to determine week bounday
-            if (
-                lastGroup &&
-                isSameWeek(transaction.createdAt, lastGroup.transactions[0].createdAt)
-            ) {
-                lastGroup.transactions.push(transaction)
-            } else {
-                const date = transaction.createdAt
-                const label = `${format(startOfWeek(date), DateFormat.monthDay)} - ${format(endOfWeek(date), DateFormat.monthDay)}`
-
-                groups.push({
-                    label,
-                    transactions: [transaction],
-                })
-            }
-        }
-
-        return groups
-    }, [])
-
     const loadData = useCallback(async () => {
         const year = selectedMonth.getFullYear()
         const month = selectedMonth.getMonth() + 1
@@ -75,7 +46,7 @@ const useTransactions = () => {
         setTransactions(rows)
         setSummary(monthSummary)
         setWeekGroups(buildWeekGroups(rows))
-    }, [selectedMonth, setSummary, setTransactions, setWeekGroups, buildWeekGroups])
+    }, [selectedMonth, setSummary, setTransactions, setWeekGroups])
 
     useEffect(() => {
         loadData()
